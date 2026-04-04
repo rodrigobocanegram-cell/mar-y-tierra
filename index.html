@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Leave a Review – Mar y Tierra</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -530,10 +530,9 @@ h1 em { font-style: italic; color: var(--gold-light); }
   background: rgba(201,169,110,0.2);
 }
 .quiz-q-text {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 17px;
-  font-weight: 300;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
   color: var(--text);
   margin-bottom: 10px;
   line-height: 1.4;
@@ -620,12 +619,11 @@ h1 em { font-style: italic; color: var(--gold-light); }
   animation: fadeUp 0.5s ease both;
 }
 .welcome-banner p {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
   color: var(--gold-light);
   line-height: 1.6;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 /* ── FOOTER UPSTARI ── */
@@ -1231,8 +1229,28 @@ async function generateAIReview() {
   document.getElementById('generating-state').style.display = 'block';
 
   const prompt = lang === 'es'
-    ? `Escribe una reseña auténtica de 2–3 oraciones para Google sobre un restaurante peruano de mariscos en Downtown Miami. El cliente dice que la comida estuvo "${answers.food}", el servicio fue "${answers.service}", y vino con "${answers.vibe}". Escribe en primera persona, con un tono natural y conversacional, como si fuera una persona real. MUY IMPORTANTE: no menciones platos específicos, nombres del menú ni ingredientes — usa solo referencias generales como "la comida", "el plato", "lo que pedí". No uses palabras exageradas. No menciones el nombre del restaurante. Devuelve solo el texto de la reseña, sin comillas ni explicaciones.`
-    : `Write an authentic 2–3 sentence Google review for a Peruvian seafood restaurant in Downtown Miami. The customer says the food was "${answers.food}", the service was "${answers.service}", and they came with "${answers.vibe}". Write in first person, natural and conversational, as if a real person wrote it. VERY IMPORTANT: do not mention specific dishes, menu items, or ingredients — use only general references like "the food", "my dish", "what I ordered". Avoid overly effusive words. Do not mention the restaurant name. Return only the review text, no quotes or explanation.`;
+    ? `Escribe una reseña corta y genuina para Google sobre un restaurante peruano de mariscos en Downtown Miami.
+El cliente calificó la comida como "${answers.food}", el servicio como "${answers.service}", y vino con "${answers.vibe}".
+Reglas estrictas:
+- MÁXIMO 2 oraciones cortas. Cada oración no debe pasar de 18 palabras.
+- Siempre escribe en tono positivo y entusiasta sin importar la opción elegida
+- Escribe en primera persona, casual y natural — como si le contaras a un amigo
+- Nunca menciones platos específicos, nombres del menú ni ingredientes — usa solo "la comida", "mi plato", "lo que pedí"
+- Nunca uses frases como "nada espectacular", "cumplió con lo esperado", "regular", o cualquier expresión que reste valor
+- Varía la estructura para que cada reseña suene única
+- No menciones el nombre del restaurante
+- Devuelve solo el texto de la reseña, sin comillas ni explicaciones`
+    : `Write a short, genuine Google review for a Peruvian seafood restaurant in Downtown Miami.
+The customer rated the food as "${answers.food}", the service as "${answers.service}", and came with "${answers.vibe}".
+Strict rules:
+- MAXIMUM 2 short sentences. Each sentence must be under 18 words.
+- Always write in a positive, enthusiastic tone regardless of the option chosen
+- Write in first person, casual and natural — like a real person texting a friend
+- Never mention specific dishes, menu items or ingredients — only say "the food", "my dish", "what I ordered"
+- Never use phrases like "nothing spectacular", "met expectations", "decent", or anything that diminishes the experience
+- Vary the structure so every review sounds unique
+- Do not mention the restaurant name
+- Return only the review text, no quotes or explanation`;
 
   try {
     const response = await fetch("/.netlify/functions/generate-review", {
