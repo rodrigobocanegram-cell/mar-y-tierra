@@ -574,28 +574,75 @@ h1 em { font-style: italic; color: var(--gold-light); }
 .review-screen { }
 .review-screen.hidden { display: none; }
 
-/* ── GENERATING SPINNER ── */
+/* ── GENERATING STATE - DOTS ── */
 .generating-state {
   display: none;
   text-align: center;
-  padding: 28px 0 10px;
+  padding: 36px 0 20px;
 }
-.generating-state.show { display: block; }
-.spinner {
-  width: 28px; height: 28px;
-  border: 2px solid rgba(201,169,110,0.2);
-  border-top-color: var(--gold);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 12px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+.generating-state.show { display: block; animation: fadeUp 0.3s ease; }
 .generating-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--gold-light);
+  opacity: 0.9;
+}
+.dots span {
+  display: inline-block;
+  animation: dotBounce 1.4s ease-in-out infinite;
+  font-size: 22px;
+  color: var(--gold);
+  margin: 0 2px;
+}
+.dots span:nth-child(2) { animation-delay: 0.2s; }
+.dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dotBounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.3; }
+  40% { transform: translateY(-8px); opacity: 1; }
+}
+
+/* ── WELCOME BANNER ── */
+.welcome-banner {
+  background: var(--gold-dim);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 12px 16px;
+  text-align: center;
+  margin-bottom: 12px;
+  animation: fadeUp 0.5s ease both;
+}
+.welcome-banner p {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
   font-size: 14px;
   color: var(--gold-light);
-  opacity: 0.8;
+  line-height: 1.5;
+}
+
+/* ── FOOTER UPSTARI ── */
+.footer-upstari {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  opacity: 0.55;
+  transition: opacity 0.2s;
+}
+.footer-upstari:hover { opacity: 1; }
+.footer-upstari-text {
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(201,169,110,0.8);
+}
+.footer-upstari-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: 0.05em;
 }
 
 /* ── ANIMATIONS ── */
@@ -633,6 +680,11 @@ h1 em { font-style: italic; color: var(--gold-light); }
   <!-- STEPS HINT -->
   <p class="steps-hint" id="steps-hint">3 quick questions · takes 60 seconds</p>
 
+  <!-- WELCOME BANNER -->
+  <div class="welcome-banner" id="welcome-banner">
+    <p id="welcome-text">Answer 3 quick questions and we'll write your review for you — ready to copy & paste.</p>
+  </div>
+
   <!-- QUESTIONNAIRE CARD -->
   <div class="card quiz-screen" id="quiz-screen">
 
@@ -641,34 +693,34 @@ h1 em { font-style: italic; color: var(--gold-light); }
       <div class="quiz-q-label" id="q1-label">Food</div>
       <div class="quiz-q-text" id="q1-text">How was your food?</div>
       <div class="quiz-options" id="q1-opts">
-        <button class="quiz-opt" data-q="food" data-val="exceptional" onclick="selectOpt(this)">🌟 Exceptional</button>
+        <button class="quiz-opt" data-q="food" data-val="delicious" onclick="selectOpt(this)">😍 Delicious</button>
         <button class="quiz-opt" data-q="food" data-val="very good" onclick="selectOpt(this)">😋 Very Good</button>
         <button class="quiz-opt" data-q="food" data-val="good" onclick="selectOpt(this)">👍 Good</button>
-        <button class="quiz-opt" data-q="food" data-val="decent" onclick="selectOpt(this)">🙂 Decent</button>
+        <button class="quiz-opt" data-q="food" data-val="decent" onclick="selectOpt(this)">😐 Decent</button>
       </div>
     </div>
 
     <!-- Q2: Service -->
     <div class="quiz-question">
       <div class="quiz-q-label" id="q2-label">Service</div>
-      <div class="quiz-q-text" id="q2-text">How was the service?</div>
+      <div class="quiz-q-text" id="q2-text">How were you treated?</div>
       <div class="quiz-options" id="q2-opts">
-        <button class="quiz-opt" data-q="service" data-val="outstanding" onclick="selectOpt(this)">⭐ Outstanding</button>
-        <button class="quiz-opt" data-q="service" data-val="attentive" onclick="selectOpt(this)">🙌 Attentive</button>
-        <button class="quiz-opt" data-q="service" data-val="friendly" onclick="selectOpt(this)">😊 Friendly</button>
-        <button class="quiz-opt" data-q="service" data-val="quick" onclick="selectOpt(this)">⚡ Quick</button>
+        <button class="quiz-opt" data-q="service" data-val="excellent" onclick="selectOpt(this)">🤩 Excellent</button>
+        <button class="quiz-opt" data-q="service" data-val="very friendly" onclick="selectOpt(this)">😊 Very Friendly</button>
+        <button class="quiz-opt" data-q="service" data-val="fast and efficient" onclick="selectOpt(this)">⚡ Fast & Efficient</button>
+        <button class="quiz-opt" data-q="service" data-val="normal" onclick="selectOpt(this)">👌 Normal</button>
       </div>
     </div>
 
-    <!-- Q3: Vibe -->
+    <!-- Q3: Who -->
     <div class="quiz-question">
-      <div class="quiz-q-label" id="q3-label">Vibe</div>
-      <div class="quiz-q-text" id="q3-text">What best describes the experience?</div>
+      <div class="quiz-q-label" id="q3-label">Who</div>
+      <div class="quiz-q-text" id="q3-text">Who did you come with?</div>
       <div class="quiz-options" id="q3-opts">
-        <button class="quiz-opt" data-q="vibe" data-val="a great place to celebrate" onclick="selectOpt(this)">🥂 Celebration</button>
-        <button class="quiz-opt" data-q="vibe" data-val="perfect for a casual lunch" onclick="selectOpt(this)">☀️ Casual Lunch</button>
-        <button class="quiz-opt" data-q="vibe" data-val="ideal for a date night" onclick="selectOpt(this)">🌙 Date Night</button>
-        <button class="quiz-opt" data-q="vibe" data-val="great for groups and families" onclick="selectOpt(this)">👨‍👩‍👧 Family / Group</button>
+        <button class="quiz-opt" data-q="vibe" data-val="my partner" onclick="selectOpt(this)">👫 My Partner</button>
+        <button class="quiz-opt" data-q="vibe" data-val="my family" onclick="selectOpt(this)">👨‍👩‍👧 Family</button>
+        <button class="quiz-opt" data-q="vibe" data-val="friends" onclick="selectOpt(this)">👯 Friends</button>
+        <button class="quiz-opt" data-q="vibe" data-val="alone or for work" onclick="selectOpt(this)">💼 Solo / Work</button>
       </div>
     </div>
 
@@ -679,13 +731,13 @@ h1 em { font-style: italic; color: var(--gold-light); }
       </button>
     </div>
 
-    <!-- Generating spinner (shown during API call) -->
-    <div class="generating-state" id="generating-state">
-      <div class="spinner"></div>
-      <div class="generating-label" id="generating-label">Crafting your review…</div>
-    </div>
-
   </div><!-- /quiz-screen -->
+
+  <!-- Generating dots (shown during API call) -->
+  <div class="card generating-state" id="generating-state" style="text-align:center; padding: 36px 20px;">
+    <div class="dots"><span>●</span><span>●</span><span>●</span></div>
+    <div class="generating-label" id="generating-label">Writing your review…</div>
+  </div>
 
   <!-- MAIN REVIEW CARD (hidden until review is generated) -->
   <div class="card review-screen hidden" id="review-screen">
@@ -708,8 +760,8 @@ h1 em { font-style: italic; color: var(--gold-light); }
     </button>
 
     <div class="actions">
-      <!-- Step 1 -->
-      <button class="btn btn-copy" id="btn-copy" onclick="copyReview()">
+      <!-- Step 1 - bigger and more prominent -->
+      <button class="btn btn-copy" id="btn-copy" onclick="copyReview()" style="padding: 17px 20px; font-size: 13px;">
         <span class="step-num">1</span>
         <span id="copy-btn-text">Copy Review</span>
       </button>
@@ -726,13 +778,13 @@ h1 em { font-style: italic; color: var(--gold-light); }
 
       <div class="copied-badge" id="copied-badge">✓ Copied — now tap Step 2 to paste it on Google</div>
 
-      <!-- Regen → back to quiz -->
-      <button class="btn btn-regen" id="btn-regen" onclick="backToQuiz()">
+      <!-- Regen — same answers, new review -->
+      <button class="btn btn-regen" id="btn-regen" onclick="generateAIReview()">
         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <polyline points="23 4 23 10 17 10"/>
           <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
         </svg>
-        <span id="regen-btn-text">Generate Another Review</span>
+        <span id="regen-btn-text">Regenerate Review</span>
       </button>
     </div>
 
@@ -774,7 +826,10 @@ h1 em { font-style: italic; color: var(--gold-light); }
 
   <!-- FOOTER -->
   <div class="footer">
-    <div class="footer-powered">Powered by <span></span></div>
+    <a href="https://upstari.com" target="_blank" class="footer-upstari">
+      <span class="footer-upstari-text">Powered by</span>
+      <span class="footer-upstari-logo">Upstari</span>
+    </a>
     <div class="footer-restaurant">Mar y Tierra Restaurant · Downtown Miami</div>
   </div>
 
@@ -846,11 +901,12 @@ const t = {
     title: 'Leave a <em>Review</em>',
     tagline: 'Thank you for dining with us today!',
     stepsHint: '3 quick questions · takes 60 seconds',
+    welcomeText: 'Answer 3 quick questions and we\'ll write your review — ready to copy & paste.',
     reviewLabel: 'Your review',
     starsLabel: '5 stars · Google',
     copyBtn: 'Copy Review',
     mapsBtn: 'Paste it on Google',
-    regenBtn: 'Answer Again',
+    regenBtn: 'Regenerate Review',
     copiedBadge: '✓ Copied — now tap Step 2 to paste it on Google',
     photoLabel: 'Add a photo',
     photoBtn: 'Take a Photo to Add to Your Review',
@@ -866,26 +922,27 @@ const t = {
     editBtn: 'Edit Review',
     editingLabel: 'Editing...',
     generateBtn: 'Generate My Review',
-    generatingLabel: 'Crafting your review…',
+    generatingLabel: 'Writing your review…',
     q1Label: 'Food', q1Text: 'How was your food?',
-    q1Opts: ['🌟 Exceptional', '😋 Very Good', '👍 Good', '🙂 Decent'],
-    q1Vals: ['exceptional', 'very good', 'good', 'decent'],
-    q2Label: 'Service', q2Text: 'How was the service?',
-    q2Opts: ['⭐ Outstanding', '🙌 Attentive', '😊 Friendly', '⚡ Quick'],
-    q2Vals: ['outstanding', 'attentive', 'friendly', 'quick'],
-    q3Label: 'Vibe', q3Text: 'What best describes the experience?',
-    q3Opts: ['🥂 Celebration', '☀️ Casual Lunch', '🌙 Date Night', '👨‍👩‍👧 Family / Group'],
-    q3Vals: ['a great place to celebrate', 'perfect for a casual lunch', 'ideal for a date night', 'great for groups and families'],
+    q1Opts: ['😍 Delicious', '😋 Very Good', '👍 Good', '😐 Decent'],
+    q1Vals: ['delicious', 'very good', 'good', 'decent'],
+    q2Label: 'Service', q2Text: 'How were you treated?',
+    q2Opts: ['🤩 Excellent', '😊 Very Friendly', '⚡ Fast & Efficient', '👌 Normal'],
+    q2Vals: ['excellent', 'very friendly', 'fast and efficient', 'normal'],
+    q3Label: 'Who', q3Text: 'Who did you come with?',
+    q3Opts: ['👫 My Partner', '👨‍👩‍👧 Family', '👯 Friends', '💼 Solo / Work'],
+    q3Vals: ['my partner', 'my family', 'friends', 'alone or for work'],
   },
   es: {
     title: 'Deja tu <em>Reseña</em>',
     tagline: '¡Gracias por visitarnos hoy!',
     stepsHint: '3 preguntas rápidas · solo 60 segundos',
+    welcomeText: 'Responde 3 preguntas y te escribimos tu reseña — lista para copiar y pegar.',
     reviewLabel: 'Tu reseña',
     starsLabel: '5 estrellas · Google',
     copyBtn: 'Copiar Reseña',
     mapsBtn: 'Pégala en Google',
-    regenBtn: 'Responder de Nuevo',
+    regenBtn: 'Regenerar Reseña',
     copiedBadge: '✓ Copiado — ahora toca el Paso 2 para pegarla en Google',
     photoLabel: 'Agrega una foto',
     photoBtn: 'Tomar Foto para tu Reseña',
@@ -902,15 +959,15 @@ const t = {
     editingLabel: 'Editando...',
     generateBtn: 'Generar mi Reseña',
     generatingLabel: 'Escribiendo tu reseña…',
-    q1Label: 'Comida', q1Text: '¿Cómo estuvo la comida?',
-    q1Opts: ['🌟 Excepcional', '😋 Muy buena', '👍 Buena', '🙂 Regular'],
-    q1Vals: ['excepcional', 'muy buena', 'buena', 'regular'],
-    q2Label: 'Servicio', q2Text: '¿Cómo fue el servicio?',
-    q2Opts: ['⭐ Excelente', '🙌 Atento', '😊 Amable', '⚡ Rápido'],
-    q2Vals: ['excelente', 'muy atento', 'muy amable', 'muy rápido'],
-    q3Label: 'Ambiente', q3Text: '¿Cómo describirías la experiencia?',
-    q3Opts: ['🥂 Celebración', '☀️ Almuerzo casual', '🌙 Cita romántica', '👨‍👩‍👧 Familia / Grupo'],
-    q3Vals: ['ideal para celebrar', 'perfecto para un almuerzo casual', 'ideal para una cita romántica', 'excelente para grupos y familias'],
+    q1Label: 'Comida', q1Text: '¿Cómo estuvo tu plato?',
+    q1Opts: ['😍 Delicioso', '😋 Muy bueno', '👍 Bueno', '😐 Regular'],
+    q1Vals: ['delicioso', 'muy bueno', 'bueno', 'regular'],
+    q2Label: 'Servicio', q2Text: '¿Cómo te atendieron?',
+    q2Opts: ['🤩 Excelente', '😊 Muy amable', '⚡ Rápido y eficiente', '👌 Normal'],
+    q2Vals: ['excelente', 'muy amable', 'rápido y eficiente', 'normal'],
+    q3Label: '¿Con quién?', q3Text: '¿Con quién viniste?',
+    q3Opts: ['👫 Mi pareja', '👨‍👩‍👧 Familia', '👯 Amigos', '💼 Solo / Trabajo'],
+    q3Vals: ['mi pareja', 'mi familia', 'amigos', 'solo o por trabajo'],
   }
 };
 
@@ -1076,6 +1133,7 @@ function setLang(lang) {
   document.getElementById('ty-sub').textContent = tx.tySub;
   document.getElementById('ty-btn').textContent = tx.tyBtn;
   document.getElementById('edit-btn-text').textContent = tx.editBtn;
+  document.getElementById('welcome-text').textContent = tx.welcomeText;
   document.getElementById('generate-btn-text').textContent = tx.generateBtn;
   document.getElementById('generating-label').textContent = tx.generatingLabel;
 
@@ -1152,14 +1210,21 @@ function backToQuiz() {
 async function generateAIReview() {
   if (!answers.food || !answers.service || !answers.vibe) return;
 
-  // Show spinner, hide quiz
-  document.getElementById('quiz-screen').classList.add('hidden');
-  document.getElementById('generating-state').classList.add('show');
-
   const lang = currentLang;
+  const isRegen = !document.getElementById('review-screen').classList.contains('hidden');
+
+  // Hide quiz, show generating state
+  document.getElementById('quiz-screen').classList.add('hidden');
+  if (isRegen) {
+    document.getElementById('review-screen').classList.add('hidden');
+  }
+  document.getElementById('generating-state').classList.remove('hidden');
+  document.getElementById('generating-state').classList.add('show');
+  document.getElementById('generating-state').style.display = 'block';
+
   const prompt = lang === 'es'
-    ? `Escribe una reseña auténtica de 2–3 oraciones para Google sobre el restaurante Mar y Tierra en Downtown Miami. El cliente dice que la comida fue "${answers.food}", el servicio fue "${answers.service}", y lo describe como "${answers.vibe}". Escribe en primera persona, con un tono natural y conversacional, como si fuera una persona real. No uses palabras exageradas como "increíble", "fantástico" o "absolutamente". No menciones el nombre del restaurante. Devuelve solo el texto de la reseña, sin comillas ni explicaciones.`
-    : `Write an authentic 2–3 sentence Google review for Mar y Tierra, a Peruvian seafood restaurant in Downtown Miami. The customer says the food was "${answers.food}", the service was "${answers.service}", and they describe it as "${answers.vibe}". Write in first person, natural and conversational, as if a real person wrote it. Avoid overly effusive words like "amazing", "fantastic", or "absolutely". Do not mention the restaurant name. Return only the review text, no quotes or explanation.`;
+    ? `Escribe una reseña auténtica de 2–3 oraciones para Google sobre el restaurante Mar y Tierra en Downtown Miami. El cliente dice que la comida estuvo "${answers.food}", el servicio fue "${answers.service}", y vino con "${answers.vibe}". Escribe en primera persona, con un tono natural y conversacional, como si fuera una persona real. No uses palabras exageradas. No menciones el nombre del restaurante. Devuelve solo el texto de la reseña, sin comillas ni explicaciones.`
+    : `Write an authentic 2–3 sentence Google review for Mar y Tierra, a Peruvian seafood restaurant in Downtown Miami. The customer says the food was "${answers.food}", the service was "${answers.service}", and they came with "${answers.vibe}". Write in first person, natural and conversational, as if a real person wrote it. Avoid overly effusive words. Do not mention the restaurant name. Return only the review text, no quotes or explanation.`;
 
   try {
     const response = await fetch("/.netlify/functions/generate-review", {
@@ -1171,8 +1236,8 @@ async function generateAIReview() {
     const data = await response.json();
     const reviewText = data.review || "";
 
-    // Show review screen
     document.getElementById('generating-state').classList.remove('show');
+    document.getElementById('generating-state').style.display = 'none';
     document.getElementById('review-screen').classList.remove('hidden');
     document.getElementById('review-text').value = reviewText;
     document.getElementById('review-text').setAttribute('readonly', true);
@@ -1180,7 +1245,6 @@ async function generateAIReview() {
     document.getElementById('edit-btn-text').textContent = t[lang].editBtn;
     document.getElementById('copied-badge').classList.remove('show');
 
-    // re-animate stars
     document.querySelectorAll('.star').forEach((s, i) => {
       s.style.animation = 'none';
       s.offsetHeight;
@@ -1194,8 +1258,9 @@ async function generateAIReview() {
   } catch(err) {
     console.error('Claude API error:', err);
     document.getElementById('generating-state').classList.remove('show');
+    document.getElementById('generating-state').style.display = 'none';
     document.getElementById('quiz-screen').classList.remove('hidden');
-    alert(lang === 'es' ? 'Hubo un error generando tu reseña. Intenta de nuevo.' : 'Something went wrong generating your review. Please try again.');
+    alert(lang === 'es' ? 'Hubo un error generando tu reseña. Intenta de nuevo.' : 'Something went wrong. Please try again.');
   }
 }
 
@@ -1207,17 +1272,17 @@ function copyReview() {
   const text = document.getElementById('review-text').value;
   navigator.clipboard.writeText(text).then(() => {
     trackEvent('copy');
-    const badge = document.getElementById('copied-badge');
-    const btn   = document.getElementById('btn-copy');
+    const badge   = document.getElementById('copied-badge');
+    const btn     = document.getElementById('btn-copy');
     const mapsBtn = document.getElementById('btn-maps');
 
     badge.classList.add('show');
     btn.style.background = '#4a7c59';
     btn.style.color = '#fff';
-    btn.querySelector('span:last-child').textContent = currentLang === 'es' ? '¡Copiado!' : 'Copied!';
+    btn.style.transform = 'scale(1.02)';
+    btn.querySelector('span:last-child').textContent = currentLang === 'es' ? '✓ ¡Copiado!' : '✓ Copied!';
     copiedDone = true;
 
-    // Pulse the Google button to guide the eye
     mapsBtn.classList.remove('pulse-cta');
     mapsBtn.offsetHeight;
     mapsBtn.classList.add('pulse-cta');
@@ -1225,6 +1290,7 @@ function copyReview() {
     setTimeout(() => {
       btn.style.background = '';
       btn.style.color = '';
+      btn.style.transform = '';
       btn.querySelector('span:last-child').textContent = t[currentLang].copyBtn;
     }, 3500);
   }).catch(() => {
