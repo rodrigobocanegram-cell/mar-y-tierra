@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leave a Review – Mar y Tierra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --gold: #C9A96E;
+  --gold-light: #E8D5B0;
+  --gold-dim: rgba(201,169,110,0.15);
+  --bg: #0A0A0A;
+  --surface: rgba(255,255,255,0.04);
+  --border: rgba(201,169,110,0.18);
+  --text: #F7F3EE;
+  --muted: #8A8078;
+  --green: #4a7c59;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Jost', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px 40px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Atmospheric background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(201,169,110,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(201,169,110,0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── HEADER ── */
+.header {
+  text-align: center;
+  margin-bottom: 18px;
+  animation: fadeDown 0.6s ease both;
+}
+
+.logo-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.logo-line::before { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold)); }
+.logo-line::after  { content: ''; flex: 1; height: 1px; background: linear-gradient(to left,  transparent, var(--gold)); }
+.diamond { width: 6px; height: 6px; background: var(--gold); transform: rotate(45deg); }
+
+h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(24px, 7vw, 34px);
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+  color: var(--text);
+}
+h1 em { font-style: italic; color: var(--gold-light); }
+
+.restaurant-name {
+  margin-top: 5px;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tagline {
+  margin-top: 10px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--gold-light);
+  opacity: 0.85;
+}
+
+/* Review counter badge */
+.review-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 6px 14px;
+  background: var(--gold-dim);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+}
+.counter-dot {
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+/* Lang toggle */
+.lang-toggle {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 14px;
+}
+.lang-btn {
+  padding: 5px 18px;
+  border-radius: 40px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  border: 1px solid rgba(201,169,110,0.3);
+  background: transparent;
+  color: var(--muted);
+  transition: all 0.25s;
+}
+.lang-btn.active {
+  background: var(--gold);
+  color: #0A0A0A;
+  border-color: var(--gold);
+  font-weight: 500;
+}
+
+/* Steps hint */
+.steps-hint {
+  text-align: center;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.6s 0.15s ease both;
+}
+.card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+}
+
+.section-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(201,169,110,0.2);
+}
+
+/* Stars display */
+.stars-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.star {
+  color: var(--gold);
+  font-size: 15px;
+  animation: starIn 0.4s ease both;
+}
+.star:nth-child(1) { animation-delay: 0.05s; }
+.star:nth-child(2) { animation-delay: 0.1s; }
+.star:nth-child(3) { animation-delay: 0.15s; }
+.star:nth-child(4) { animation-delay: 0.2s; }
+.star:nth-child(5) { animation-delay: 0.25s; }
+@keyframes starIn {
+  from { opacity: 0; transform: scale(0.4) rotate(-30deg); }
+  to   { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+.stars-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+/* Textarea */
+#review-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15.5px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--text);
+  width: 100%;
+  min-height: 108px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 2px;
+  padding: 12px 14px;
+  resize: none;
+  outline: none;
+  transition: border-color 0.3s;
+}
+#review-text:focus { border-color: rgba(201,169,110,0.4); }
+#review-text[readonly] { cursor: default; }
+
+.btn-edit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 5px 10px;
+  background: transparent;
+  border: 1px solid rgba(201,169,110,0.25);
+  border-radius: 2px;
+  color: var(--muted);
+  font-family: 'Jost', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-edit:hover { color: var(--gold); border-color: rgba(201,169,110,0.5); }
+.btn-edit.active { color: var(--gold); border-color: var(--gold); }
+
+
+
+/* ── BUTTONS ── */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 20px;
+  border: none;
+  border-radius: 2px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.22s;
+  width: 100%;
+  position: relative;
+}
+
+.step-num {
+  position: absolute;
+  left: 16px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 22px;
+  line-height: 1;
+  opacity: 0.75;
+}
+
+.btn-copy {
+  background: var(--gold);
+  color: #0A0A0A;
+}
+.btn-copy:hover { background: var(--gold-light); transform: translateY(-1px); }
+.btn-copy:active { transform: translateY(0); }
+
+.btn-maps {
+  background: #ffffff;
+  color: #1a1a1a;
+}
+.btn-maps:hover { background: #f0f0f0; transform: translateY(-1px); }
+.btn-maps:active { transform: translateY(0); }
+
+/* Pulse animation on btn-maps after copy */
+.btn-maps.pulse-cta {
+  animation: ctaPulse 1s ease 0.3s 2;
+}
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+  50% { box-shadow: 0 0 0 6px rgba(255,255,255,0.15); }
+}
+
+.btn-regen {
+  background: transparent;
+  color: var(--gold-light);
+  border: 1px solid rgba(201,169,110,0.35);
+  font-size: 10.5px;
+}
+.btn-regen:hover { background: var(--gold-dim); }
+
+/* Copied badge */
+.copied-badge {
+  display: none;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--green);
+  padding: 9px 0 2px;
+}
+.copied-badge.show { display: block; animation: fadeUp 0.3s ease; }
+
+/* ── PHOTO SECTION ── */
+.photo-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.btn-photo {
+  background: transparent;
+  color: var(--gold-light);
+  border: 1px dashed rgba(201,169,110,0.4);
+  width: 100%;
+  font-size: 11px;
+}
+.btn-photo:hover { background: var(--gold-dim); }
+.photo-hint {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+.photo-preview { display: none; margin-bottom: 10px; border-radius: 2px; overflow: hidden; }
+.photo-preview img { width: 100%; display: block; border-radius: 2px; }
+.btn-retake {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid rgba(255,255,255,0.12);
+  width: 100%;
+  margin-top: 7px;
+  font-size: 10.5px;
+}
+
+/* ── PLATFORM BUTTONS (premium) ── */
+.platform-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.platform-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.platform-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+}
+.platform-btns {
+  display: flex;
+  gap: 8px;
+}
+.btn-platform {
+  flex: 1;
+  padding: 9px 8px;
+  border-radius: 2px;
+  font-family: 'Jost', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: var(--muted);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn-platform:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+  border-color: rgba(255,255,255,0.2);
+}
+
+/* ── THANK YOU SCREEN ── */
+.thankyou-screen {
+  display: none;
+  text-align: center;
+  padding: 30px 10px 20px;
+  animation: fadeUp 0.5s ease;
+}
+.thankyou-screen.show { display: block; }
+.thankyou-icon {
+  font-size: 40px;
+  margin-bottom: 14px;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.thankyou-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold-light);
+  margin-bottom: 8px;
+}
+.thankyou-sub {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+}
+.btn-another {
+  margin-top: 20px;
+  background: transparent;
+  color: var(--gold);
+  border: 1px solid var(--border);
+  padding: 11px 24px;
+  border-radius: 2px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-another:hover { background: var(--gold-dim); }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  margin-top: 24px;
+  animation: fadeUp 0.6s 0.4s ease both;
+}
+.footer-powered {
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(138,128,120,0.4);
+}
+.footer-powered span {
+  color: rgba(201,169,110,0.5);
+  font-weight: 500;
+}
+.footer-restaurant {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: rgba(138,128,120,0.3);
+  margin-top: 4px;
+}
+
+/* ── QUESTIONNAIRE SCREEN ── */
+.quiz-screen {
+  animation: fadeUp 0.5s ease both;
+}
+.quiz-screen.hidden { display: none; }
+
+.quiz-question {
+  margin-bottom: 18px;
+}
+.quiz-q-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.quiz-q-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(201,169,110,0.2);
+}
+.quiz-q-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 17px;
+  font-weight: 300;
+  color: var(--text);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+.quiz-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.quiz-opt {
+  padding: 8px 16px;
+  border-radius: 40px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  border: 1px solid rgba(201,169,110,0.3);
+  background: transparent;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+.quiz-opt:hover { border-color: var(--gold); color: var(--gold-light); }
+.quiz-opt.selected {
+  background: var(--gold);
+  color: #0A0A0A;
+  border-color: var(--gold);
+  font-weight: 500;
+}
+
+.btn-generate {
+  background: var(--gold);
+  color: #0A0A0A;
+  margin-top: 6px;
+  opacity: 0.4;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.2s;
+}
+.btn-generate.ready {
+  opacity: 1;
+  pointer-events: all;
+}
+.btn-generate.ready:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+/* ── REVIEW SCREEN ── */
+.review-screen { }
+.review-screen.hidden { display: none; }
+
+/* ── GENERATING SPINNER ── */
+.generating-state {
+  display: none;
+  text-align: center;
+  padding: 28px 0 10px;
+}
+.generating-state.show { display: block; }
+.spinner {
+  width: 28px; height: 28px;
+  border: 2px solid rgba(201,169,110,0.2);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.generating-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--gold-light);
+  opacity: 0.8;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-line"><div class="diamond"></div></div>
+    <h1 id="title-text">Leave a <em>Review</em></h1>
+    <p class="restaurant-name">Mar y Tierra · Miami</p>
+    <p class="tagline" id="tagline-text">Thank you for dining with us today!</p>
+
+    <div class="review-counter">
+      <div class="counter-dot"></div>
+      <span id="counter-text">Loading reviews...</span>
+    </div>
+
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')">🇺🇸 English</button>
+      <button class="lang-btn" onclick="setLang('es')">🇪🇸 Español</button>
+    </div>
+  </div>
+
+  <!-- STEPS HINT -->
+  <p class="steps-hint" id="steps-hint">3 quick questions · takes 60 seconds</p>
+
+  <!-- QUESTIONNAIRE CARD -->
+  <div class="card quiz-screen" id="quiz-screen">
+
+    <!-- Q1: Food -->
+    <div class="quiz-question">
+      <div class="quiz-q-label" id="q1-label">Food</div>
+      <div class="quiz-q-text" id="q1-text">How was your food?</div>
+      <div class="quiz-options" id="q1-opts">
+        <button class="quiz-opt" data-q="food" data-val="exceptional" onclick="selectOpt(this)">🌟 Exceptional</button>
+        <button class="quiz-opt" data-q="food" data-val="very good" onclick="selectOpt(this)">😋 Very Good</button>
+        <button class="quiz-opt" data-q="food" data-val="good" onclick="selectOpt(this)">👍 Good</button>
+        <button class="quiz-opt" data-q="food" data-val="decent" onclick="selectOpt(this)">🙂 Decent</button>
+      </div>
+    </div>
+
+    <!-- Q2: Service -->
+    <div class="quiz-question">
+      <div class="quiz-q-label" id="q2-label">Service</div>
+      <div class="quiz-q-text" id="q2-text">How was the service?</div>
+      <div class="quiz-options" id="q2-opts">
+        <button class="quiz-opt" data-q="service" data-val="outstanding" onclick="selectOpt(this)">⭐ Outstanding</button>
+        <button class="quiz-opt" data-q="service" data-val="attentive" onclick="selectOpt(this)">🙌 Attentive</button>
+        <button class="quiz-opt" data-q="service" data-val="friendly" onclick="selectOpt(this)">😊 Friendly</button>
+        <button class="quiz-opt" data-q="service" data-val="quick" onclick="selectOpt(this)">⚡ Quick</button>
+      </div>
+    </div>
+
+    <!-- Q3: Vibe -->
+    <div class="quiz-question">
+      <div class="quiz-q-label" id="q3-label">Vibe</div>
+      <div class="quiz-q-text" id="q3-text">What best describes the experience?</div>
+      <div class="quiz-options" id="q3-opts">
+        <button class="quiz-opt" data-q="vibe" data-val="a great place to celebrate" onclick="selectOpt(this)">🥂 Celebration</button>
+        <button class="quiz-opt" data-q="vibe" data-val="perfect for a casual lunch" onclick="selectOpt(this)">☀️ Casual Lunch</button>
+        <button class="quiz-opt" data-q="vibe" data-val="ideal for a date night" onclick="selectOpt(this)">🌙 Date Night</button>
+        <button class="quiz-opt" data-q="vibe" data-val="great for groups and families" onclick="selectOpt(this)">👨‍👩‍👧 Family / Group</button>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-generate" id="btn-generate" onclick="generateAIReview()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span id="generate-btn-text">Generate My Review</span>
+      </button>
+    </div>
+
+    <!-- Generating spinner (shown during API call) -->
+    <div class="generating-state" id="generating-state">
+      <div class="spinner"></div>
+      <div class="generating-label" id="generating-label">Crafting your review…</div>
+    </div>
+
+  </div><!-- /quiz-screen -->
+
+  <!-- MAIN REVIEW CARD (hidden until review is generated) -->
+  <div class="card review-screen hidden" id="review-screen">
+    <div class="section-label" id="review-label">Your review</div>
+
+    <!-- 5 Stars -->
+    <div class="stars-row">
+      <span class="star">★</span>
+      <span class="star">★</span>
+      <span class="star">★</span>
+      <span class="star">★</span>
+      <span class="star">★</span>
+      <span class="stars-label" id="stars-label">5 stars · Google</span>
+    </div>
+
+    <textarea id="review-text" rows="5" spellcheck="false" readonly></textarea>
+    <button class="btn-edit" id="btn-edit" onclick="enableEdit()">
+      <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <span id="edit-btn-text">Edit Review</span>
+    </button>
+
+    <div class="actions">
+      <!-- Step 1 -->
+      <button class="btn btn-copy" id="btn-copy" onclick="copyReview()">
+        <span class="step-num">1</span>
+        <span id="copy-btn-text">Copy Review</span>
+      </button>
+
+      <!-- Step 2 -->
+      <button class="btn btn-maps" id="btn-maps" onclick="openGoogle()">
+        <span class="step-num" style="color:#1a1a1a;">2</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335"/>
+          <circle cx="12" cy="9" r="2.5" fill="#fff"/>
+        </svg>
+        <span id="maps-btn-text">Paste it on Google</span>
+      </button>
+
+      <div class="copied-badge" id="copied-badge">✓ Copied — now tap Step 2 to paste it on Google</div>
+
+      <!-- Regen → back to quiz -->
+      <button class="btn btn-regen" id="btn-regen" onclick="backToQuiz()">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        <span id="regen-btn-text">Generate Another Review</span>
+      </button>
+    </div>
+
+    <!-- Thank you screen (hidden until maps clicked) -->
+    <div class="thankyou-screen" id="thankyou-screen">
+      <div class="thankyou-icon">🙏</div>
+      <div class="thankyou-title" id="ty-title">Thank you so much!</div>
+      <p class="thankyou-sub" id="ty-sub">Your review means the world to us.<br>See you again soon.</p>
+      <button class="btn-another" onclick="resetFlow()" id="ty-btn">Leave Another Review</button>
+    </div>
+
+    <!-- PHOTO -->
+    <div class="photo-section" id="photo-section">
+      <div class="section-label" id="photo-label">Add a photo</div>
+      <div class="photo-preview" id="photo-preview"><img id="photo-img"/></div>
+      <input type="file" id="camera-input" accept="image/*" style="display:none;" onchange="handlePhoto(event)"/>
+      <button class="btn btn-photo" id="btn-photo" onclick="openCamera()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+        <span id="photo-btn-text">Take a Photo to Add to Your Review</span>
+      </button>
+      <p class="photo-hint" id="photo-hint">Photos increase review impact by 35% — snap one with your server!</p>
+    </div>
+
+    <!-- OTHER PLATFORMS -->
+    <div class="platform-section">
+      <div class="platform-label" id="platform-label">Also review us on</div>
+      <div class="platform-btns">
+        <button class="btn-platform" onclick="openYelp()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="#FF1A1A"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+          Yelp
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-powered">Powered by <span></span></div>
+    <div class="footer-restaurant">Mar y Tierra Restaurant · Downtown Miami</div>
+  </div>
+
+</div><!-- /container -->
+
+<script type="module">
+// ── CONFIG ──
+const GOOGLE_URL    = "https://search.google.com/local/writereview?placeid=ChIJIZedcp622YgR_44emCOFlF4";
+const YELP_URL      = "https://www.yelp.com/biz/mar-y-tierra-miami";
+const COUNTER_KEY   = "myt_review_count";
+const RESTAURANT_ID = "mar-y-tierra";
+
+let currentLang = 'en';
+let copiedDone  = false;
+let db = null;
+
+// ── FIREBASE ──
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDj_X5gPMHUcS_cIj4YNJhv0cSe8El89fI",
+  authDomain: "mar-y-tierra-81467.firebaseapp.com",
+  projectId: "mar-y-tierra-81467",
+  storageBucket: "mar-y-tierra-81467.firebasestorage.app",
+  messagingSenderId: "978413524273",
+  appId: "1:978413524273:web:50109567dbd668dfd10c10"
+};
+
+try {
+  const app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+} catch(e) { console.log('Firebase init error:', e); }
+
+// ── TRACKING ──
+async function trackEvent(type) {
+  try {
+    if (db) {
+      await addDoc(collection(db, 'events'), {
+        restaurant: RESTAURANT_ID,
+        type,
+        lang: currentLang,
+        ts: Timestamp.now()
+      });
+    }
+  } catch(e) { console.log('Track error:', e); }
+}
+
+// ── COUNTER ──
+function getCount() {
+  try { return 57 + parseInt(localStorage.getItem(COUNTER_KEY) || '0'); } catch(e) { return 57; }
+}
+function incrementCount() {
+  try {
+    const n = getCount() + 1;
+    localStorage.setItem(COUNTER_KEY, n);
+    return n;
+  } catch(e) { return 1; }
+}
+function renderCounter(n) {
+  const el = document.getElementById('counter-text');
+  const tx = t[currentLang];
+  el.textContent = n + ' ' + (n === 1 ? tx.counterSingle : tx.counterPlural);
+}
+
+// ── TRANSLATIONS ──
+const t = {
+  en: {
+    title: 'Leave a <em>Review</em>',
+    tagline: 'Thank you for dining with us today!',
+    stepsHint: '3 quick questions · takes 60 seconds',
+    reviewLabel: 'Your review',
+    starsLabel: '5 stars · Google',
+    copyBtn: 'Copy Review',
+    mapsBtn: 'Paste it on Google',
+    regenBtn: 'Answer Again',
+    copiedBadge: '✓ Copied — now tap Step 2 to paste it on Google',
+    photoLabel: 'Add a photo',
+    photoBtn: 'Take a Photo to Add to Your Review',
+    photoHint: 'Photos increase review impact by 35% — snap one with your server!',
+    photoTaken: 'Press and hold to save · then upload it on Google Maps',
+    retakeBtn: 'Retake',
+    platformLabel: 'Also review us on',
+    counterSingle: 'review generated this month',
+    counterPlural: 'reviews generated this month',
+    tyTitle: 'Thank you so much!',
+    tySub: 'Your review means the world to us.\nSee you again soon.',
+    tyBtn: 'Leave Another Review',
+    editBtn: 'Edit Review',
+    editingLabel: 'Editing...',
+    generateBtn: 'Generate My Review',
+    generatingLabel: 'Crafting your review…',
+    q1Label: 'Food', q1Text: 'How was your food?',
+    q1Opts: ['🌟 Exceptional', '😋 Very Good', '👍 Good', '🙂 Decent'],
+    q1Vals: ['exceptional', 'very good', 'good', 'decent'],
+    q2Label: 'Service', q2Text: 'How was the service?',
+    q2Opts: ['⭐ Outstanding', '🙌 Attentive', '😊 Friendly', '⚡ Quick'],
+    q2Vals: ['outstanding', 'attentive', 'friendly', 'quick'],
+    q3Label: 'Vibe', q3Text: 'What best describes the experience?',
+    q3Opts: ['🥂 Celebration', '☀️ Casual Lunch', '🌙 Date Night', '👨‍👩‍👧 Family / Group'],
+    q3Vals: ['a great place to celebrate', 'perfect for a casual lunch', 'ideal for a date night', 'great for groups and families'],
+  },
+  es: {
+    title: 'Deja tu <em>Reseña</em>',
+    tagline: '¡Gracias por visitarnos hoy!',
+    stepsHint: '3 preguntas rápidas · solo 60 segundos',
+    reviewLabel: 'Tu reseña',
+    starsLabel: '5 estrellas · Google',
+    copyBtn: 'Copiar Reseña',
+    mapsBtn: 'Pégala en Google',
+    regenBtn: 'Responder de Nuevo',
+    copiedBadge: '✓ Copiado — ahora toca el Paso 2 para pegarla en Google',
+    photoLabel: 'Agrega una foto',
+    photoBtn: 'Tomar Foto para tu Reseña',
+    photoHint: 'Las fotos aumentan el impacto 35% — ¡tómate una con tu mesero!',
+    photoTaken: 'Mantén presionada para guardar · luego súbela en Google Maps',
+    retakeBtn: 'Repetir',
+    platformLabel: 'También reseñanos en',
+    counterSingle: 'reseña generada este mes',
+    counterPlural: 'reseñas generadas este mes',
+    tyTitle: '¡Muchas gracias!',
+    tySub: 'Tu reseña significa mucho para nosotros.\nHasta pronto.',
+    tyBtn: 'Dejar Otra Reseña',
+    editBtn: 'Editar Reseña',
+    editingLabel: 'Editando...',
+    generateBtn: 'Generar mi Reseña',
+    generatingLabel: 'Escribiendo tu reseña…',
+    q1Label: 'Comida', q1Text: '¿Cómo estuvo la comida?',
+    q1Opts: ['🌟 Excepcional', '😋 Muy buena', '👍 Buena', '🙂 Regular'],
+    q1Vals: ['excepcional', 'muy buena', 'buena', 'regular'],
+    q2Label: 'Servicio', q2Text: '¿Cómo fue el servicio?',
+    q2Opts: ['⭐ Excelente', '🙌 Atento', '😊 Amable', '⚡ Rápido'],
+    q2Vals: ['excelente', 'muy atento', 'muy amable', 'muy rápido'],
+    q3Label: 'Ambiente', q3Text: '¿Cómo describirías la experiencia?',
+    q3Opts: ['🥂 Celebración', '☀️ Almuerzo casual', '🌙 Cita romántica', '👨‍👩‍👧 Familia / Grupo'],
+    q3Vals: ['ideal para celebrar', 'perfecto para un almuerzo casual', 'ideal para una cita romántica', 'excelente para grupos y familias'],
+  }
+};
+
+// ── REVIEWS ──
+const reviews = {
+  en: [
+    "The seafood here is genuinely fresh and you can tell from the first bite. Service was attentive and the whole meal felt effortless. Solid spot in downtown Miami.",
+    "Came here on a Tuesday and the place was doing well for a reason. Fresh food, friendly staff and a price that makes sense. Already coming back.",
+    "The staff here pays attention. They noticed when we needed something before we had to ask. That combined with really good fresh food makes this place stand out.",
+    "Good energy from the moment you walk in. The food lives up to the atmosphere and the service keeps everything moving at a comfortable pace.",
+    "Mar y Tierra is the kind of place you feel good recommending. The food is consistently fresh and the service makes people want to return.",
+    "Came with high expectations and they were met. Fresh seafood, solid service and a comfortable setting that made the whole experience enjoyable.",
+    "The quality speaks for itself here. Nothing overdone. Fresh ingredients handled well and a staff that makes you feel taken care of.",
+    "Brought my sister who is hard to please and she asked to come back the following week. That says everything about the food and service here.",
+    "Really well run place. The food is fresh every time and the service has a consistency that is hard to maintain and easy to appreciate when you find it.",
+    "The freshness of the ingredients here is the foundation of everything. You can taste it clearly and it makes the whole meal worth every penny.",
+    "Good neighborhood spot that punches above its weight. Fresh seafood, honest portions and a service team that genuinely cares.",
+    "Walked in on a busy Friday and still got great service and fresh food. Quality holding up during peak hours says a lot about how this place is run.",
+    "Simple place doing things right. The seafood is fresh, the service is warm and the price is fair. That combination is rarer than it should be in Miami.",
+    "Every time I come here I leave satisfied and that is not something I can say about many restaurants. Consistent quality and genuine service.",
+    "Good food, good people, good price. Mar y Tierra has the three things that matter most and delivers them consistently.",
+    "The seafood tastes like it was sourced with care. Clean flavors, nothing artificial. Just good fresh food served by a team that knows what they are doing.",
+    "Came for a quick lunch and ended up having one of the better meals I have had in a while. The food was fresh and the service made everything comfortable.",
+    "The service here feels natural rather than scripted. Friendly, attentive and never intrusive. Paired with really good fresh food it makes for a great visit.",
+    "This place has found the right balance between quality and value. Fresh seafood, generous portions and a staff that treats every customer well.",
+    "Reliable and good every single time. The freshness of the food never slips and the service is always consistent. That reliability builds real loyalty.",
+    "Mar y Tierra earns every good review it gets. Fresh ingredients, skilled preparation and a staff that makes the experience feel personal.",
+    "Came in without a reservation on a weekend and they took good care of us. Fresh food, friendly service and no feeling of being rushed. Really appreciated that.",
+    "The food quality here holds up visit after visit. Fresh seafood, proper seasoning and portions that leave you satisfied. Service is always pleasant.",
+    "Good restaurant that respects its customers. Fresh food, honest portions, good service and a price that reflects the quality without taking advantage.",
+    "The whole experience works. Fresh food, good service, comfortable setting and a price that makes sense. Mar y Tierra gets all of it right and does it consistently.",
+    "Walked in not knowing much about the place and walked out with a new regular spot. Fresh seafood, warm service and quality better than expected.",
+    "Came here after a recommendation and immediately understood why. Fresh food, great service and a price that does not disappoint. Downtown Miami gem.",
+    "The freshness here is not just a selling point it is a standard they clearly hold themselves to. Every visit confirms it.",
+    "Came during a busy lunch hour and still served well and quickly. Fresh food, friendly staff and no drop in quality despite the volume.",
+    "The seafood here tastes the way seafood is supposed to taste. Fresh, clean and well prepared. Service is attentive and the meal comes together really well.",
+    "The Lomo Saltado here is the real deal. Tender beef, crispy fries and that wok smoke you just can't fake. One of the best I've had outside of Peru.",
+    "Ordered the Ceviche and it was everything. Fresh fish, perfect lime and just the right kick. You can tell they don't cut corners.",
+    "The Arroz con mariscos was loaded with seafood and full of flavor. Every bite had something in it. Absolutely worth coming back for.",
+    "Had the Pescado a lo macho and it blew me away. Rich generous sauce on top. Paired it with a Pisco Sour and the whole meal was perfect.",
+    "The Pisco Sour here is properly made. Frothy, balanced and strong enough to feel it. Best one I've had in Miami by far.",
+    "Tried the Tacu tacu a lo macho for the first time and now I can't stop thinking about it. That combination just makes complete sense.",
+    "The Chaufa de carne y pollo was exactly what I needed. Generous portions, great wok flavor and just the right seasoning. Comfort food done right.",
+    "Picante de mariscos delivered on every level. Spicy, rich and packed with fresh seafood. Reminded me why Peruvian food is on another level.",
+    "We shared the Parrilla de mariscos and it was a showstopper. Everything perfectly cooked, nothing rubbery. The whole table loved it.",
+    "The Vuelve a la vida is not just a name. After one bowl I understood exactly why they call it that.",
+    "Tallarines verde con Churrasco was a great combination. The green sauce was fresh and herby and the steak was cooked exactly as I asked.",
+    "The Churrasco a lo pobre came out with everything. Egg, sweet plantains, rice and a perfectly seared steak. Generous and delicious.",
+    "Ordered the Choritos a la chalaca as a starter and ended up fighting over the last one. The mussels were fresh and the salsa criolla on top made it pop.",
+    "Papa a la huancaina sounds simple but tells you everything about a kitchen. Theirs was creamy, well seasoned and served cold just like it should be.",
+    "The Pollo saltado was a great alternative to the classic. Tender chicken, good wok technique and that soy and lime balance that makes Peruvian stir fry so addictive.",
+    "Came here after a long day and honestly it was exactly what I needed. Good food, good service, no complaints.",
+    "My coworker brought me here for the first time last week. Already been back twice since then.",
+    "The staff here actually makes you feel welcome. Not something you find everywhere in Miami.",
+    "Solid Peruvian food in the heart of downtown. Hard to beat the value here.",
+    "We were a party of six and everything came out at the same time. Impressed by the coordination.",
+    "I travel to Miami often for work and this has become my go-to spot every time I'm here.",
+    "First time trying Peruvian food and this place made a great first impression. Will definitely explore more of the menu.",
+    "The food here is straightforward and delicious. No gimmicks, just really good cooking.",
+    "Walked by this place for months before finally going in. Wish I hadn't waited so long.",
+    "Great lunch spot. Fast enough for a work break and good enough to actually enjoy.",
+    "Took my parents here and they loved it. My dad said it was the best meal of the trip.",
+    "Never had a bad experience here across multiple visits. That consistency keeps me coming back.",
+    "The menu has a lot of options but the staff helped us choose. Great guidance and great food.",
+    "Small place with a big heart. The food is generous and the service always makes you feel taken care of.",
+    "Downtown Miami has a lot of restaurants but not many that deliver like this one does.",
+    "Came for lunch on a Friday and it was busy but the service never slipped. Impressive.",
+    "The portions here are serious. Came hungry and left very satisfied without spending a lot.",
+    "Really clean spot with attentive service and food that actually tastes fresh. Rare combination.",
+    "Been recommending this place to everyone I know in Miami. Never had anyone come back disappointed.",
+    "Simple, honest and consistently good. That is exactly what I look for in a neighborhood restaurant."
+  ],
+  es: [
+    "Llevaba tiempo buscando un lugar de mariscos en el que confiar y este es. La comida llega fresca siempre, el personal es atento y el precio es completamente justo.",
+    "Vine por primera vez con mi esposo y los dos salimos muy satisfechos. La comida estuvo excelente y el personal nos hizo sentir cómodos desde el momento en que llegamos.",
+    "Lo que más me gustó fue que la comida se siente hecha con cuidado real. Se nota que en esta cocina le ponen atención a cada plato que sale.",
+    "El mesero estuvo pendiente sin molestar y eso es más difícil de encontrar de lo que parece. La comida estuvo muy buena y todo llegó en buen tiempo.",
+    "Este lugar tiene algo que pocos tienen que es consistencia real. Cada vez que vengo la experiencia es igual de buena. Eso genera confianza y lealtad verdadera.",
+    "La atención al cliente aquí se siente genuina. No parece entrenada sino natural. El personal trata bien a la gente y eso marca una diferencia enorme.",
+    "Pasé a comer sin haberlo planeado y terminé teniendo una de las mejores comidas de esa semana. Los mariscos estaban en su punto y el servicio fue muy agradable.",
+    "Traje a unos amigos que nunca habían venido y todos quedaron impresionados. La comida habla por sí sola y el ambiente complementa bien la experiencia.",
+    "Se nota que usan ingredientes de calidad porque los sabores son limpios y naturales. Buena cocina sin complicaciones innecesarias.",
+    "El servicio aquí funciona bien incluso bajo presión. Vine un domingo con bastante gente y aún así todo llegó a tiempo y en buen estado.",
+    "Desde que entras el ambiente se siente acogedor. No es solo la decoración sino la actitud del personal desde el primer momento.",
+    "Las porciones son generosas sin sentirse excesivas. Se nota que hay respeto por el cliente en la forma en que sirven.",
+    "Vine a celebrar un aniversario y la experiencia fue muy agradable. El personal se portó muy bien y la comida estuvo completamente a la altura.",
+    "Lo recomendé a mis padres y después me llamaron para agradecerme. La comida les encantó y dijeron que el personal fue muy atento. Eso me dejó muy contento.",
+    "Aquí no hace falta pedir que te atiendan bien porque ya lo hacen de entrada. El personal es proactivo y eso hace que todo fluya sin esfuerzo.",
+    "La frescura de los ingredientes no es algo que anuncian sino algo que uno comprueba al comer. Aquí es evidente que es completamente real.",
+    "Vine entre semana buscando algo bueno a buen precio y encontré las dos cosas. Buena comida, precio justo y un servicio que no te hace sentir de más.",
+    "El lugar está siempre limpio y bien organizado y eso dice mucho de cómo se maneja el negocio por dentro. La comida refleja ese mismo orden.",
+    "Muy buena experiencia en general. La comida llegó tal como la esperaba y el personal fue amable durante toda la visita. Eso se valora mucho.",
+    "Vine con mis hijos y el personal fue muy paciente con ellos durante toda la comida. La comida también estuvo muy buena.",
+    "Este restaurante tiene la combinación que uno busca. Comida fresca, buen servicio y un ambiente donde uno se siente a gusto. Vale la pena.",
+    "Me gusta que aquí no intentan ser algo que no son. Es un lugar honesto con buena comida y buen servicio. Sin pretensiones y sin decepciones.",
+    "La primera impresión fue buena y la comida confirmó todo lo que prometía. Ingredientes frescos, buen sazón y un servicio que estuvo presente sin interrumpir.",
+    "Pedí para llevar y llegó todo bien empacado y todavía fresco. Aquí se nota claramente que sí les importa la calidad.",
+    "Vine recomendado por un compañero de trabajo y entiendo perfectamente por qué lo recomendó. La calidad es consistente y el personal hace que uno se sienta bien atendido.",
+    "La comida aquí tiene carácter propio. No sabe a nada genérico. Se siente como cocina con identidad propia.",
+    "Buen lugar para venir en grupo. El personal maneja bien las mesas grandes y la comida llega a tiempo para todos.",
+    "Me impresionó la rapidez del servicio sin que se sintiera apresurado en ningún momento. Todo llegó caliente y fresco.",
+    "Llevo más de un año viniendo aquí y la calidad no ha bajado en ninguna visita. Eso es lo más difícil de mantener en un restaurante.",
+    "La relación calidad precio aquí es de las mejores que he encontrado en Miami. No tienes que gastar mucho para comer muy bien y eso en esta ciudad vale muchísimo.",
+    "Fuimos a celebrar un cumpleaños y pedimos el Lomo Saltado para compartir. La mesa entera lo aprobó y eso que somos difíciles para comer.",
+    "El Ceviche nos lo recomendó el mesero y acertó. Muy fresco y con bastante sabor. Ya lo pedimos de entrada cada vez que venimos.",
+    "El Arroz con mariscos era enorme. Mi esposo y yo lo compartimos y aun así nos sobró. Buenísimo.",
+    "Nunca había probado el Pescado a lo macho y me lo recomendó un amigo. Ahora entiendo por qué lo recomienda tanto.",
+    "El Pisco Sour lo pedimos casi de costumbre cada vez que venimos. Aquí lo hacen como debe ser.",
+    "El Tacu tacu a lo macho lo probé por primera vez aquí y me dejó muy gratamente sorprendido. Ya lo pedí dos veces más desde entonces.",
+    "El Chaufa de carne y pollo es lo que pide mi hijo cada vez que venimos. No lo cambia por nada y lo entiendo perfectamente.",
+    "El Picante de mariscos lo compartimos en la mesa y no duró nada. Picaba justo y el marisco estaba muy fresco.",
+    "Pedimos la Parrilla de mariscos para festejar y fue todo lo que esperábamos. Nada pasado, todo en su punto.",
+    "El Vuelve a la vida lo pedí porque me llamó la curiosidad el nombre. Después del primer bocado entendí todo.",
+    "Los Tallarines verde con Churrasco los pedí sin saber bien qué esperar y me sorprendieron muy gratamente. El churrasco llegó perfecto.",
+    "El Churrasco a lo pobre llegó con todo incluido y la porción fue enorme. Salimos muy satisfechos y sin gastar de más.",
+    "Empezamos con los Choritos a la chalaca y le dieron un muy buen inicio a la comida. Frescos y con bastante sabor.",
+    "La Papa a la huancaina la pedí de entrada porque me la recomendaron y desde ese día siempre la pido cuando vengo.",
+    "El Pollo saltado lo pedí porque quería algo diferente al ceviche y fue muy buena decisión. Con mucho sabor y buena porción.",
+    "Vine entre semana a almorzar y salí tan contento que volví al día siguiente. No pasa seguido eso.",
+    "Me lo recomendó mi vecina y desde la primera vez que fui no he parado de volver.",
+    "El personal aquí te trata bien de verdad. No es el tipo de amabilidad forzada que ves en otros lados.",
+    "Buena comida peruana en pleno centro de Miami. La relación precio calidad es difícil de superar.",
+    "Vinimos seis personas y todo llegó junto y bien servido. Eso no es fácil de lograr.",
+    "Vengo a Miami seguido por trabajo y siempre termino viniendo aquí. Ya es parte de la rutina.",
+    "Primera vez que probaba comida peruana y este lugar me dejó con ganas de seguir explorando el menú.",
+    "La comida aquí es directa y deliciosa. Sin pretensiones y con mucho sabor.",
+    "Pasé por fuera durante meses antes de entrar. Ojalá lo hubiera hecho mucho antes.",
+    "Buen lugar para almorzar entre semana. Rápido sin perder calidad y rico de verdad.",
+    "Traje a mis papás y quedaron encantados. Mi mamá dijo que fue lo mejor que comió en el viaje.",
+    "He venido varias veces y siempre ha salido todo bien. Esa constancia es lo que me hace volver.",
+    "El menú tiene muchas opciones y el mesero nos ayudó a elegir bien. Buena orientación.",
+    "Lugar pequeño pero con mucho corazón. La comida es generosa y el servicio siempre atento.",
+    "En el centro de Miami hay muchos restaurantes pero pocos que cumplan como este.",
+    "Vine un viernes a almorzar y estaba lleno pero el servicio no bajó en ningún momento.",
+    "Las porciones aquí son serias. Entré con mucha hambre y salí muy satisfecho sin gastar de más.",
+    "Lugar limpio, servicio atento y comida que sabe fresca. No es tan común encontrar las tres juntas.",
+    "Le he recomendado este lugar a mucha gente y ninguno ha vuelto con quejas. Todo lo contrario.",
+    "Sencillo, honesto y siempre bueno. Exactamente lo que uno busca en un restaurante de barrio."
+  ]
+};
+
+// ── LANGUAGE ──
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach((b, i) =>
+    b.classList.toggle('active', (i === 0 && lang === 'en') || (i === 1 && lang === 'es'))
+  );
+  const tx = t[lang];
+  document.getElementById('title-text').innerHTML = tx.title;
+  document.getElementById('tagline-text').textContent = tx.tagline;
+  document.getElementById('steps-hint').textContent = tx.stepsHint;
+  document.getElementById('review-label').textContent = tx.reviewLabel;
+  document.getElementById('stars-label').textContent = tx.starsLabel;
+  document.getElementById('copy-btn-text').textContent = tx.copyBtn;
+  document.getElementById('maps-btn-text').textContent = tx.mapsBtn;
+  document.getElementById('regen-btn-text').textContent = tx.regenBtn;
+  document.getElementById('copied-badge').textContent = tx.copiedBadge;
+  document.getElementById('photo-label').textContent = tx.photoLabel;
+  document.getElementById('photo-btn-text').textContent = tx.photoBtn;
+  document.getElementById('photo-hint').textContent = tx.photoHint;
+  document.getElementById('platform-label').textContent = tx.platformLabel;
+  document.getElementById('ty-title').textContent = tx.tyTitle;
+  document.getElementById('ty-sub').textContent = tx.tySub;
+  document.getElementById('ty-btn').textContent = tx.tyBtn;
+  document.getElementById('edit-btn-text').textContent = tx.editBtn;
+  document.getElementById('generate-btn-text').textContent = tx.generateBtn;
+  document.getElementById('generating-label').textContent = tx.generatingLabel;
+
+  // Update quiz labels and options
+  document.getElementById('q1-label').textContent = tx.q1Label;
+  document.getElementById('q1-text').textContent = tx.q1Text;
+  document.getElementById('q2-label').textContent = tx.q2Label;
+  document.getElementById('q2-text').textContent = tx.q2Text;
+  document.getElementById('q3-label').textContent = tx.q3Label;
+  document.getElementById('q3-text').textContent = tx.q3Text;
+
+  // Re-render option buttons for each question
+  [
+    { id: 'q1-opts', opts: tx.q1Opts, vals: tx.q1Vals, q: 'food' },
+    { id: 'q2-opts', opts: tx.q2Opts, vals: tx.q2Vals, q: 'service' },
+    { id: 'q3-opts', opts: tx.q3Opts, vals: tx.q3Vals, q: 'vibe' },
+  ].forEach(({ id, opts, vals, q }) => {
+    const container = document.getElementById(id);
+    container.innerHTML = '';
+    opts.forEach((label, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-opt';
+      btn.dataset.q = q;
+      btn.dataset.val = vals[i];
+      btn.textContent = label;
+      btn.onclick = () => selectOpt(btn);
+      if (answers[q] === vals[i]) btn.classList.add('selected');
+      container.appendChild(btn);
+    });
+  });
+
+  renderCounter(getCount());
+}
+
+// ── EDIT ──
+function enableEdit() {
+  const ta = document.getElementById('review-text');
+  const btn = document.getElementById('btn-edit');
+  ta.removeAttribute('readonly');
+  ta.focus();
+  btn.classList.add('active');
+  const tx = t[currentLang];
+  document.getElementById('edit-btn-text').textContent = tx.editingLabel || 'Editing...';
+}
+
+// ── QUIZ STATE ──
+const answers = { food: null, service: null, vibe: null };
+
+function selectOpt(btn) {
+  const q = btn.dataset.q;
+  const val = btn.dataset.val;
+  // deselect siblings
+  document.querySelectorAll(`.quiz-opt[data-q="${q}"]`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[q] = val;
+  checkQuizReady();
+}
+
+function checkQuizReady() {
+  const ready = answers.food && answers.service && answers.vibe;
+  const btn = document.getElementById('btn-generate');
+  btn.classList.toggle('ready', !!ready);
+}
+
+function backToQuiz() {
+  document.getElementById('review-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  document.getElementById('thankyou-screen').classList.remove('show');
+  document.getElementById('photo-section').style.display = '';
+  copiedDone = false;
+}
+
+// ── AI REVIEW GENERATION ──
+async function generateAIReview() {
+  if (!answers.food || !answers.service || !answers.vibe) return;
+
+  // Show spinner, hide quiz
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('generating-state').classList.add('show');
+
+  const lang = currentLang;
+  const prompt = lang === 'es'
+    ? `Escribe una reseña auténtica de 2–3 oraciones para Google sobre el restaurante Mar y Tierra en Downtown Miami. El cliente dice que la comida fue "${answers.food}", el servicio fue "${answers.service}", y lo describe como "${answers.vibe}". Escribe en primera persona, con un tono natural y conversacional, como si fuera una persona real. No uses palabras exageradas como "increíble", "fantástico" o "absolutamente". No menciones el nombre del restaurante. Devuelve solo el texto de la reseña, sin comillas ni explicaciones.`
+    : `Write an authentic 2–3 sentence Google review for Mar y Tierra, a Peruvian seafood restaurant in Downtown Miami. The customer says the food was "${answers.food}", the service was "${answers.service}", and they describe it as "${answers.vibe}". Write in first person, natural and conversational, as if a real person wrote it. Avoid overly effusive words like "amazing", "fantastic", or "absolutely". Do not mention the restaurant name. Return only the review text, no quotes or explanation.`;
+
+  try {
+    const response = await fetch("/.netlify/functions/generate-review", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
+
+    const data = await response.json();
+    const reviewText = data.review || "";
+
+    // Show review screen
+    document.getElementById('generating-state').classList.remove('show');
+    document.getElementById('review-screen').classList.remove('hidden');
+    document.getElementById('review-text').value = reviewText;
+    document.getElementById('review-text').setAttribute('readonly', true);
+    document.getElementById('btn-edit').classList.remove('active');
+    document.getElementById('edit-btn-text').textContent = t[lang].editBtn;
+    document.getElementById('copied-badge').classList.remove('show');
+
+    // re-animate stars
+    document.querySelectorAll('.star').forEach((s, i) => {
+      s.style.animation = 'none';
+      s.offsetHeight;
+      s.style.animation = `starIn 0.4s ${0.05 + i * 0.05}s ease both`;
+    });
+
+    document.getElementById('btn-maps').classList.remove('pulse-cta');
+    copiedDone = false;
+    trackEvent('ai_generate');
+
+  } catch(err) {
+    console.error('Claude API error:', err);
+    document.getElementById('generating-state').classList.remove('show');
+    document.getElementById('quiz-screen').classList.remove('hidden');
+    alert(lang === 'es' ? 'Hubo un error generando tu reseña. Intenta de nuevo.' : 'Something went wrong generating your review. Please try again.');
+  }
+}
+
+// ── LEGACY: kept for resetFlow ──
+function generateReview() { backToQuiz(); }
+
+// ── COPY ──
+function copyReview() {
+  const text = document.getElementById('review-text').value;
+  navigator.clipboard.writeText(text).then(() => {
+    trackEvent('copy');
+    const badge = document.getElementById('copied-badge');
+    const btn   = document.getElementById('btn-copy');
+    const mapsBtn = document.getElementById('btn-maps');
+
+    badge.classList.add('show');
+    btn.style.background = '#4a7c59';
+    btn.style.color = '#fff';
+    btn.querySelector('span:last-child').textContent = currentLang === 'es' ? '¡Copiado!' : 'Copied!';
+    copiedDone = true;
+
+    // Pulse the Google button to guide the eye
+    mapsBtn.classList.remove('pulse-cta');
+    mapsBtn.offsetHeight;
+    mapsBtn.classList.add('pulse-cta');
+
+    setTimeout(() => {
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.querySelector('span:last-child').textContent = t[currentLang].copyBtn;
+    }, 3500);
+  }).catch(() => {
+    const ta = document.getElementById('review-text');
+    ta.select();
+    document.execCommand('copy');
+  });
+}
+
+// ── OPEN PLATFORMS ──
+function openGoogle() {
+  trackEvent('google');
+  window.open(GOOGLE_URL, '_blank');
+  if (copiedDone) {
+    setTimeout(() => showThankYou(), 1000);
+    const n = incrementCount();
+    renderCounter(n);
+  }
+}
+function openYelp() { trackEvent('yelp'); window.open(YELP_URL, '_blank'); }
+
+// ── THANK YOU ──
+function showThankYou() {
+  document.getElementById('photo-section').style.display = 'none';
+  const ty = document.getElementById('thankyou-screen');
+  ty.classList.add('show');
+  ty.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function resetFlow() {
+  backToQuiz();
+  copiedDone = false;
+}
+
+// ── PHOTO ──
+function openCamera() {
+  const input = document.getElementById('camera-input');
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if (isIOS) {
+    input.setAttribute('capture', 'environment');
+  } else {
+    input.removeAttribute('capture');
+  }
+  input.click();
+}
+
+function handlePhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  // Usar URL.createObjectURL para mejor compatibilidad en Android
+  const url = URL.createObjectURL(file);
+  const img = document.getElementById('photo-img');
+  img.onload = () => URL.revokeObjectURL(url); // liberar memoria
+  img.src = url;
+
+  document.getElementById('photo-preview').style.display = 'block';
+  document.getElementById('btn-photo').style.display = 'none';
+
+  // Botón retake
+  const existing = document.getElementById('btn-retake');
+  if (!existing) {
+    const retake = document.createElement('button');
+    retake.className = 'btn btn-retake';
+    retake.id = 'btn-retake';
+    retake.onclick = retakePhoto;
+    retake.textContent = t[currentLang].retakeBtn;
+    document.getElementById('photo-hint').before(retake);
+  }
+  document.getElementById('photo-hint').textContent = t[currentLang].photoTaken;
+  document.getElementById('photo-hint').style.color = 'var(--gold)';
+}
+function retakePhoto() {
+  document.getElementById('photo-preview').style.display = 'none';
+  document.getElementById('camera-input').value = '';
+  document.getElementById('btn-photo').style.display = 'flex';
+  const rb = document.getElementById('btn-retake');
+  if (rb) rb.remove();
+  document.getElementById('photo-hint').textContent = t[currentLang].photoHint;
+  document.getElementById('photo-hint').style.color = '';
+}
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  trackEvent('pageview');
+  setLang('en');
+});
+
+// ── EXPOSE FUNCTIONS TO HTML ──
+window.setLang = setLang;
+window.copyReview = copyReview;
+window.openGoogle = openGoogle;
+window.openYelp = openYelp;
+window.generateReview = generateReview;
+window.generateAIReview = generateAIReview;
+window.backToQuiz = backToQuiz;
+window.selectOpt = selectOpt;
+window.enableEdit = enableEdit;
+window.openCamera = openCamera;
+window.handlePhoto = handlePhoto;
+window.retakePhoto = retakePhoto;
+window.resetFlow = resetFlow;
+</script>
+</body>
+</html>
