@@ -632,23 +632,21 @@ h1 em { font-style: italic; color: var(--gold-light); }
   align-items: center;
   gap: 5px;
   text-decoration: none;
-  opacity: 0.55;
+  opacity: 0.5;
   transition: opacity 0.2s;
 }
-.footer-upstari:hover { opacity: 1; }
+.footer-upstari:hover { opacity: 0.9; }
 .footer-upstari-text {
-  font-size: 9.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(201,169,110,0.8);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: lowercase;
+  color: var(--muted);
 }
 .footer-upstari-logo {
   font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 13px;
+  font-size: 15px;
   color: var(--gold);
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 /* ── ANIMATIONS ── */
@@ -766,15 +764,13 @@ h1 em { font-style: italic; color: var(--gold-light); }
     </button>
 
     <div class="actions">
-      <!-- Step 1 - bigger and more prominent -->
+      <!-- Copy button -->
       <button class="btn btn-copy" id="btn-copy" onclick="copyReview()" style="padding: 17px 20px; font-size: 13px;">
-        <span class="step-num">1</span>
         <span id="copy-btn-text">Copy Review</span>
       </button>
 
-      <!-- Step 2 -->
+      <!-- Google button -->
       <button class="btn btn-maps" id="btn-maps" onclick="openGoogle()">
-        <span class="step-num" style="color:#1a1a1a;">2</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335"/>
           <circle cx="12" cy="9" r="2.5" fill="#fff"/>
@@ -782,7 +778,7 @@ h1 em { font-style: italic; color: var(--gold-light); }
         <span id="maps-btn-text">Paste it on Google</span>
       </button>
 
-      <div class="copied-badge" id="copied-badge">✓ Copied — now tap Step 2 to paste it on Google</div>
+      <div class="copied-badge" id="copied-badge">✓ Copied — now tap the button above to paste it on Google</div>
 
       <!-- Regen — same answers, new review -->
       <button class="btn btn-regen" id="btn-regen" onclick="generateAIReview()">
@@ -833,8 +829,8 @@ h1 em { font-style: italic; color: var(--gold-light); }
   <!-- FOOTER -->
   <div class="footer">
     <a href="https://upstari.com" target="_blank" class="footer-upstari">
-      <span class="footer-upstari-text">Powered by</span>
-      <span class="footer-upstari-logo">Upstari</span>
+      <span class="footer-upstari-text">powered by</span>
+      <span class="footer-upstari-logo"><em>Upstari</em></span>
     </a>
     <div class="footer-restaurant">Mar y Tierra Restaurant · Downtown Miami</div>
   </div>
@@ -913,7 +909,7 @@ const t = {
     copyBtn: 'Copy Review',
     mapsBtn: 'Paste it on Google',
     regenBtn: 'Regenerate Review',
-    copiedBadge: '✓ Copied — now tap Step 2 to paste it on Google',
+    copiedBadge: '✓ Copied — now tap the button above to paste it on Google',
     photoLabel: 'Add a photo',
     photoBtn: 'Take a Photo to Add to Your Review',
     photoHint: 'Photos increase review impact by 35% — snap one with your server!',
@@ -949,7 +945,7 @@ const t = {
     copyBtn: 'Copiar Reseña',
     mapsBtn: 'Pégala en Google',
     regenBtn: 'Regenerar Reseña',
-    copiedBadge: '✓ Copiado — ahora toca el Paso 2 para pegarla en Google',
+    copiedBadge: '✓ Copiado — ahora toca el botón de arriba para pegarla en Google',
     photoLabel: 'Agrega una foto',
     photoBtn: 'Tomar Foto para tu Reseña',
     photoHint: 'Las fotos aumentan el impacto 35% — ¡tómate una con tu mesero!',
@@ -1229,28 +1225,42 @@ async function generateAIReview() {
   document.getElementById('generating-state').style.display = 'block';
 
   const prompt = lang === 'es'
-    ? `Escribe una reseña corta y genuina para Google sobre un restaurante peruano de mariscos en Downtown Miami.
-El cliente calificó la comida como "${answers.food}", el servicio como "${answers.service}", y vino con "${answers.vibe}".
-Reglas estrictas:
-- MÁXIMO 2 oraciones cortas. Cada oración no debe pasar de 18 palabras.
-- Siempre escribe en tono positivo y entusiasta sin importar la opción elegida
-- Escribe en primera persona, casual y natural — como si le contaras a un amigo
-- Nunca menciones platos específicos, nombres del menú ni ingredientes — usa solo "la comida", "mi plato", "lo que pedí"
-- Nunca uses frases como "nada espectacular", "cumplió con lo esperado", "regular", o cualquier expresión que reste valor
-- Varía la estructura para que cada reseña suene única
-- No menciones el nombre del restaurante
-- Devuelve solo el texto de la reseña, sin comillas ni explicaciones`
-    : `Write a short, genuine Google review for a Peruvian seafood restaurant in Downtown Miami.
-The customer rated the food as "${answers.food}", the service as "${answers.service}", and came with "${answers.vibe}".
-Strict rules:
-- MAXIMUM 2 short sentences. Each sentence must be under 18 words.
-- Always write in a positive, enthusiastic tone regardless of the option chosen
-- Write in first person, casual and natural — like a real person texting a friend
-- Never mention specific dishes, menu items or ingredients — only say "the food", "my dish", "what I ordered"
-- Never use phrases like "nothing spectacular", "met expectations", "decent", or anything that diminishes the experience
-- Vary the structure so every review sounds unique
-- Do not mention the restaurant name
-- Return only the review text, no quotes or explanation`;
+    ? `Eres una persona real de Miami que acaba de salir de un restaurante peruano en el downtown. Le estás mandando un mensaje por WhatsApp a un amigo cercano ahora mismo.
+
+Escribe exactamente 2 oraciones — sin introducción ni firma. Tono casual, conversacional y directo: usa el lenguaje como hablas normalmente, algún emoji si encaja, nada formal.
+
+La experiencia fue: comida ${answers.food}, servicio ${answers.service}, vine con ${answers.vibe}.
+
+Reglas estrictas para evitar respuestas genéricas o repetitivas:
+- Empieza cada review de forma completamente diferente: a veces por cómo estuvo la comida, a veces por el ambiente al entrar, a veces por la actitud del personal, a veces por cómo saliste
+- Usa vocabulario variado y estructuras distintas cada vez
+- Nunca menciones nombres de platos ni del menú — di "la comida", "lo que pedí", "mi plato"
+- Evita superlativos vacíos (increíble, espectacular, lo mejor, etc.) y frases que podrían aplicar a cualquier restaurante
+- Que suene como si realmente hubieras estado ahí
+
+Ejemplos de cómo NO debe sonar:
+- "La comida estaba deliciosa y el servicio excelente. Me fui muy contento."
+- "Todo estuvo rico y el mesero fue amable. Recomiendo."
+
+Devuelve solo el texto de la reseña. Sin comillas ni explicación.`
+    : `You are a real person from Miami who just left a Peruvian seafood restaurant downtown. You're texting a close friend on WhatsApp right now.
+
+Write exactly 2 sentences — no intro, no sign-off. Be casual, conversational and real: use contractions, the occasional emoji if it fits naturally, and everyday Miami language. Nothing formal.
+
+The experience was: food was ${answers.food}, service was ${answers.service}, came with ${answers.vibe}.
+
+Strict rules to avoid generic or repetitive responses:
+- Start each review completely differently: sometimes lead with how the food hit, sometimes with the vibe when you walked in, sometimes with how the staff made you feel, sometimes with how you left feeling
+- Use varied vocabulary and sentence structures every time
+- Never mention specific dish names or menu items — say "the food", "what I got", "my plate"
+- Avoid empty superlatives (amazing, incredible, the best, etc.) and phrases that could apply to any restaurant
+- Make it sound like you were actually there
+
+Examples of how it should NOT sound:
+- "The food was delicious and the service was great. I left very happy."
+- "Everything was good and the waiter was friendly. Highly recommend."
+
+Return only the review text. No quotes, no explanation.`;
 
   try {
     const response = await fetch("/.netlify/functions/generate-review", {
@@ -1302,22 +1312,30 @@ function copyReview() {
     const btn     = document.getElementById('btn-copy');
     const mapsBtn = document.getElementById('btn-maps');
 
+    // Copy button turns green + smaller
     badge.classList.add('show');
     btn.style.background = '#4a7c59';
     btn.style.color = '#fff';
-    btn.style.transform = 'scale(1.02)';
+    btn.style.padding = '13px 20px';
     btn.querySelector('span:last-child').textContent = currentLang === 'es' ? '✓ ¡Copiado!' : '✓ Copied!';
     copiedDone = true;
 
-    // Enlarge + pulse Google button
+    // Google button turns green, grows, text changes
     mapsBtn.classList.remove('pulse-cta', 'enlarged');
     mapsBtn.offsetHeight;
-    mapsBtn.classList.add('pulse-cta', 'enlarged');
+    mapsBtn.style.background = '#34A853';
+    mapsBtn.style.color = '#fff';
+    mapsBtn.style.padding = '18px 20px';
+    mapsBtn.style.fontSize = '13px';
+    mapsBtn.style.fontWeight = '600';
+    mapsBtn.style.boxShadow = '0 0 0 3px rgba(52,168,83,0.3)';
+    mapsBtn.querySelector('span').textContent = currentLang === 'es' ? '¡Pégala en Google ahora! →' : 'Paste it on Google now! →';
+    mapsBtn.classList.add('pulse-cta');
 
     setTimeout(() => {
       btn.style.background = '';
       btn.style.color = '';
-      btn.style.transform = '';
+      btn.style.padding = '';
       btn.querySelector('span:last-child').textContent = t[currentLang].copyBtn;
     }, 3500);
   }).catch(() => {
