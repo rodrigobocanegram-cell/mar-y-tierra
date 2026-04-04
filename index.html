@@ -312,17 +312,24 @@ h1 em { font-style: italic; color: var(--gold-light); }
 .btn-maps {
   background: #ffffff;
   color: #1a1a1a;
+  transition: all 0.3s;
 }
 .btn-maps:hover { background: #f0f0f0; transform: translateY(-1px); }
 .btn-maps:active { transform: translateY(0); }
 
-/* Pulse animation on btn-maps after copy */
+/* Pulse + grow animation on btn-maps after copy */
 .btn-maps.pulse-cta {
-  animation: ctaPulse 1s ease 0.3s 2;
+  animation: ctaPulse 0.9s ease 0.2s 3;
+}
+.btn-maps.enlarged {
+  padding: 18px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
 }
 @keyframes ctaPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
-  50% { box-shadow: 0 0 0 6px rgba(255,255,255,0.15); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); transform: scale(1); }
+  50% { box-shadow: 0 0 0 8px rgba(255,255,255,0.15); transform: scale(1.03); }
 }
 
 .btn-regen {
@@ -607,7 +614,7 @@ h1 em { font-style: italic; color: var(--gold-light); }
   background: var(--gold-dim);
   border: 1px solid var(--border);
   border-radius: 3px;
-  padding: 12px 16px;
+  padding: 14px 18px;
   text-align: center;
   margin-bottom: 12px;
   animation: fadeUp 0.5s ease both;
@@ -615,9 +622,10 @@ h1 em { font-style: italic; color: var(--gold-light); }
 .welcome-banner p {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
-  font-size: 14px;
+  font-size: 18px;
   color: var(--gold-light);
-  line-height: 1.5;
+  line-height: 1.6;
+  font-weight: 400;
 }
 
 /* ── FOOTER UPSTARI ── */
@@ -924,11 +932,11 @@ const t = {
     generateBtn: 'Generate My Review',
     generatingLabel: 'Writing your review…',
     q1Label: 'Food', q1Text: 'How was your food?',
-    q1Opts: ['😍 Delicious', '😋 Very Good', '👍 Good', '😐 Decent'],
-    q1Vals: ['delicious', 'very good', 'good', 'decent'],
+    q1Opts: ['😍 Delicious', '😋 Very Good', '👍 Good'],
+    q1Vals: ['delicious', 'very good', 'good'],
     q2Label: 'Service', q2Text: 'How were you treated?',
-    q2Opts: ['🤩 Excellent', '😊 Very Friendly', '⚡ Fast & Efficient', '👌 Normal'],
-    q2Vals: ['excellent', 'very friendly', 'fast and efficient', 'normal'],
+    q2Opts: ['🤩 Excellent', '😊 Very Friendly', '⚡ Fast & Efficient'],
+    q2Vals: ['excellent', 'very friendly', 'fast and efficient'],
     q3Label: 'Who', q3Text: 'Who did you come with?',
     q3Opts: ['👫 My Partner', '👨‍👩‍👧 Family', '👯 Friends', '💼 Solo / Work'],
     q3Vals: ['my partner', 'my family', 'friends', 'alone or for work'],
@@ -960,11 +968,11 @@ const t = {
     generateBtn: 'Generar mi Reseña',
     generatingLabel: 'Escribiendo tu reseña…',
     q1Label: 'Comida', q1Text: '¿Cómo estuvo tu plato?',
-    q1Opts: ['😍 Delicioso', '😋 Muy bueno', '👍 Bueno', '😐 Regular'],
-    q1Vals: ['delicioso', 'muy bueno', 'bueno', 'regular'],
+    q1Opts: ['😍 Delicioso', '😋 Muy bueno', '👍 Bueno'],
+    q1Vals: ['delicioso', 'muy bueno', 'bueno'],
     q2Label: 'Servicio', q2Text: '¿Cómo te atendieron?',
-    q2Opts: ['🤩 Excelente', '😊 Muy amable', '⚡ Rápido y eficiente', '👌 Normal'],
-    q2Vals: ['excelente', 'muy amable', 'rápido y eficiente', 'normal'],
+    q2Opts: ['🤩 Excelente', '😊 Muy amable', '⚡ Rápido y eficiente'],
+    q2Vals: ['excelente', 'muy amable', 'rápido y eficiente'],
     q3Label: '¿Con quién?', q3Text: '¿Con quién viniste?',
     q3Opts: ['👫 Mi pareja', '👨‍👩‍👧 Familia', '👯 Amigos', '💼 Solo / Trabajo'],
     q3Vals: ['mi pareja', 'mi familia', 'amigos', 'solo o por trabajo'],
@@ -1223,8 +1231,8 @@ async function generateAIReview() {
   document.getElementById('generating-state').style.display = 'block';
 
   const prompt = lang === 'es'
-    ? `Escribe una reseña auténtica de 2–3 oraciones para Google sobre el restaurante Mar y Tierra en Downtown Miami. El cliente dice que la comida estuvo "${answers.food}", el servicio fue "${answers.service}", y vino con "${answers.vibe}". Escribe en primera persona, con un tono natural y conversacional, como si fuera una persona real. No uses palabras exageradas. No menciones el nombre del restaurante. Devuelve solo el texto de la reseña, sin comillas ni explicaciones.`
-    : `Write an authentic 2–3 sentence Google review for Mar y Tierra, a Peruvian seafood restaurant in Downtown Miami. The customer says the food was "${answers.food}", the service was "${answers.service}", and they came with "${answers.vibe}". Write in first person, natural and conversational, as if a real person wrote it. Avoid overly effusive words. Do not mention the restaurant name. Return only the review text, no quotes or explanation.`;
+    ? `Escribe una reseña auténtica de 2–3 oraciones para Google sobre un restaurante peruano de mariscos en Downtown Miami. El cliente dice que la comida estuvo "${answers.food}", el servicio fue "${answers.service}", y vino con "${answers.vibe}". Escribe en primera persona, con un tono natural y conversacional, como si fuera una persona real. MUY IMPORTANTE: no menciones platos específicos, nombres del menú ni ingredientes — usa solo referencias generales como "la comida", "el plato", "lo que pedí". No uses palabras exageradas. No menciones el nombre del restaurante. Devuelve solo el texto de la reseña, sin comillas ni explicaciones.`
+    : `Write an authentic 2–3 sentence Google review for a Peruvian seafood restaurant in Downtown Miami. The customer says the food was "${answers.food}", the service was "${answers.service}", and they came with "${answers.vibe}". Write in first person, natural and conversational, as if a real person wrote it. VERY IMPORTANT: do not mention specific dishes, menu items, or ingredients — use only general references like "the food", "my dish", "what I ordered". Avoid overly effusive words. Do not mention the restaurant name. Return only the review text, no quotes or explanation.`;
 
   try {
     const response = await fetch("/.netlify/functions/generate-review", {
@@ -1283,9 +1291,10 @@ function copyReview() {
     btn.querySelector('span:last-child').textContent = currentLang === 'es' ? '✓ ¡Copiado!' : '✓ Copied!';
     copiedDone = true;
 
-    mapsBtn.classList.remove('pulse-cta');
+    // Enlarge + pulse Google button
+    mapsBtn.classList.remove('pulse-cta', 'enlarged');
     mapsBtn.offsetHeight;
-    mapsBtn.classList.add('pulse-cta');
+    mapsBtn.classList.add('pulse-cta', 'enlarged');
 
     setTimeout(() => {
       btn.style.background = '';
