@@ -224,8 +224,8 @@ h1 em { font-style: italic; color: var(--gold-light); }
 
 /* Textarea */
 #review-text {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 15.5px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
   font-weight: 400;
   line-height: 1.7;
   color: var(--text);
@@ -246,12 +246,12 @@ h1 em { font-style: italic; color: var(--gold-light); }
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 6px;
-  padding: 5px 10px;
-  background: transparent;
-  border: 1px solid rgba(201,169,110,0.25);
+  margin-top: 8px;
+  padding: 7px 14px;
+  background: rgba(201,169,110,0.08);
+  border: 1px solid rgba(201,169,110,0.45);
   border-radius: 2px;
-  color: var(--muted);
+  color: var(--gold-light);
   font-family: 'Jost', sans-serif;
   font-size: 10px;
   letter-spacing: 0.12em;
@@ -259,8 +259,8 @@ h1 em { font-style: italic; color: var(--gold-light); }
   cursor: pointer;
   transition: all 0.2s;
 }
-.btn-edit:hover { color: var(--gold); border-color: rgba(201,169,110,0.5); }
-.btn-edit.active { color: var(--gold); border-color: var(--gold); }
+.btn-edit:hover { background: rgba(201,169,110,0.18); border-color: var(--gold); color: var(--gold); }
+.btn-edit.active { color: var(--gold); border-color: var(--gold); background: rgba(201,169,110,0.15); }
 
 
 
@@ -1099,51 +1099,11 @@ async function generateAIReview() {
   document.getElementById('generating-state').classList.add('show');
   document.getElementById('generating-state').style.display = 'block';
 
-  const prompt = lang === 'es'
-    ? `Eres una persona real de Miami que acaba de cenar en un restaurante peruano de mariscos en Downtown Miami.
-
-Acabas de responder 3 preguntas sobre tu experiencia:
-- Comida: ${answers.food}
-- Servicio: ${answers.service}
-- Viniste con: ${answers.vibe}
-
-Escribe una reseña corta para Google como lo haría una persona normal. Máximo 2-3 oraciones cortas. Tono casual y humano, ni muy formal ni muy informal.
-
-Reglas:
-- Empieza cada reseña de forma diferente. A veces por la comida, a veces por el servicio, a veces por cómo saliste, a veces por el ambiente.
-- Nunca menciones nombres de platos específicos. Di "la comida", "lo que pedí", "mi plato" o "todo lo que comimos".
-- Tono positivo pero creíble. Evita palabras exageradas como increíble, espectacular, lo mejor, impresionante.
-- Nunca uses frases que resten valor como "nada del otro mundo", "cumplió", "regular" o similares.
-- Puedes mencionar de forma natural: que las porciones son generosas, que el servicio fue atento, que saliste satisfecho, que el lugar es cómodo.
-- Sin emojis. Sin guiones. Sin comillas.
-- No menciones el nombre del restaurante.
-
-Devuelve únicamente el texto de la reseña, sin explicaciones ni nada más.`
-    : `You are a real person from Miami who just had dinner at a Peruvian seafood restaurant in Downtown Miami.
-
-You just answered 3 questions about your experience:
-- Food: ${answers.food}
-- Service: ${answers.service}
-- Came with: ${answers.vibe}
-
-Write a short Google review the way a normal customer would write it. Maximum 2-3 short sentences. Casual and human, not too formal, not too informal.
-
-Rules:
-- Start each review differently. Sometimes lead with the food, sometimes the service, sometimes how you felt walking out, sometimes the atmosphere.
-- Never mention specific dish names. Say "the food", "what I ordered", "my plate" or "everything we ate".
-- Keep it positive but believable. Avoid over-the-top words like amazing, incredible, best ever, outstanding.
-- Never use phrases that diminish the experience like "nothing special", "it was ok", "decent" or similar.
-- You can naturally mention: generous portions, attentive service, leaving satisfied, comfortable setting.
-- No emojis. No dashes. No quotes.
-- Do not mention the restaurant name.
-
-Return only the review text, no explanations, nothing else.`;
-
   try {
     const response = await fetch("/.netlify/functions/generate-review", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt })
+      body: JSON.stringify({ food: answers.food, service: answers.service, vibe: answers.vibe, lang })
     });
 
     const data = await response.json();
