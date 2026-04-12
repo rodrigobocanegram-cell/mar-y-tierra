@@ -64,8 +64,8 @@ exports.handler = async function(event) {
           ],
           'amigos': [
             'vine con mis amigos y todos salimos contentos, volveremos',
-            'lugar perfecto para venir entre amigos',
-            'vine con mis amigos y nos gustó todo',
+            'lugar perfecto para venir en grupo',
+            'vine con mis amigos y nos gustó todo, buena experiencia',
             'ambiente ideal para juntarte con tus amigos, excelente el happy hour'
           ],
           'solo': [
@@ -120,7 +120,7 @@ exports.handler = async function(event) {
             'food came out fast, perfect if you don\'t have much time',
             'perfect for a quick lunch, they don\'t waste your time',
             'efficient and friendly, both at the same time',
-            'in less than an hour I ate well, paid and left — exactly what I needed'
+            'in less than an hour I ate well, paid and left. Exactly what I needed'
           ]
         },
         vibe: {
@@ -138,8 +138,8 @@ exports.handler = async function(event) {
           ],
           'friends': [
             'came with my friends and we all left happy, we\'ll be back',
-            'perfect place to come with friends',
-            'came with my friends and we loved everything',
+            'perfect place to come in a group',
+            'came with my friends and we loved everything, great time',
             'great spot to meet up with friends, the happy hour is excellent'
           ],
           'alone': [
@@ -168,7 +168,7 @@ exports.handler = async function(event) {
     const vibeDescriptor    = pick(d.vibe[vibe]      || d.vibe['alone']);
 
     const prompt = lang === 'es'
-      ? `Eres una persona real que acaba de comer en un restaurante peruano en Downtown Miami. El lugar es pequeño, casual y conocido entre la gente local y trabajadores de oficinas de la zona. La comida es la razón principal por la que la gente vuelve — porciones generosas, sabor auténtico y precios que tienen sentido. No es un restaurante de lujo ni pretende serlo.
+      ? `Eres una persona real que acaba de comer en un restaurante peruano en Downtown Miami. El lugar es pequeño, casual y conocido entre la gente local de la zona. La comida es la razón principal por la que la gente vuelve — porciones generosas, sabor auténtico y precios que tienen sentido. No es un restaurante de lujo ni pretende serlo.
 
 Basándote en esta experiencia específica:
 - Comida: ${food} — ${foodDescriptor}
@@ -182,7 +182,7 @@ Varía siempre el punto de partida: a veces empieza por la comida, a veces por c
 Nunca uses frases que resten valor como "nada del otro mundo", "cumplió", "estuvo bien" o similares.
 
 Sin emojis. Sin guiones. Sin comillas. Sin nombres de platos. Sin nombrar el restaurante. Solo el texto de la reseña.`
-      : `You are a real person who just ate at a Peruvian restaurant in Downtown Miami. The place is small, casual and known among locals and office workers in the area. The food is the main reason people come back — generous portions, authentic flavor and prices that make sense. It's not a fancy restaurant and doesn't try to be.
+      : `You are a real person who just ate at a Peruvian restaurant in Downtown Miami. The place is small, casual and known among locals in the area. The food is the main reason people come back — generous portions, authentic flavor and prices that make sense. It's not a fancy restaurant and doesn't try to be.
 
 Based on this specific experience:
 - Food: ${food} — ${foodDescriptor}
@@ -195,7 +195,7 @@ Always vary the starting point: sometimes lead with the food, sometimes how you 
 
 Never use phrases that diminish the experience like "nothing special", "it was ok", "decent" or similar.
 
-No emojis. No dashes. No quotes. No dish names. No restaurant name. Only the review text.`;
+No emojis. No dashes of any kind including em dashes and hyphens used as punctuation. No quotes. No dish names. No restaurant name. Only the review text.`;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
