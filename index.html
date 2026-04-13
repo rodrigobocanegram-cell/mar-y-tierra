@@ -1140,8 +1140,10 @@ async function generateAIReview() {
 
     // Scroll to welcome banner so client sees "Your review is ready!" first
     setTimeout(() => {
-      document.getElementById('welcome-banner').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+      const banner = document.getElementById('welcome-banner');
+      const y = banner.getBoundingClientRect().top + window.pageYOffset - 12;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }, 150);
 
   } catch(err) {
     console.error('Claude API error:', err);
