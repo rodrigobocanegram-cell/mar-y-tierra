@@ -175,10 +175,11 @@ Basándote en esta experiencia específica:
 - Servicio: ${service} — ${serviceDescriptor}
 - Viniste con: ${vibe} — ${vibeDescriptor}
 
-Escribe una reseña para Google exactamente como la escribiría esa persona — máximo 2-3 oraciones, casual y directa. Como hablaría alguien que vino a comer sin pretensiones — directo, sin exagerar, sin sonar a reseña de hotel de 5 estrellas.
+Escribe una reseña para Google exactamente como la escribiría esa persona. Entre 2 y 3 oraciones, con un total de entre 25 y 35 palabras. Tono casual y directo, como hablaría alguien que vino a comer sin pretensiones.
 
 Varía siempre el punto de partida: a veces empieza por la comida, a veces por cómo te sentiste al salir, a veces por el servicio, a veces por algo que te sorprendió.
 
+Nunca uses lenguaje de crítica gastronómica como "sabores que transportan", "autenticidad culinaria", "fusión de sabores" o similares.
 Nunca uses frases que resten valor como "nada del otro mundo", "cumplió", "estuvo bien" o similares.
 
 Sin emojis. Sin guiones. Sin comillas. Sin nombres de platos. Sin nombrar el restaurante. Solo el texto de la reseña.`
@@ -189,10 +190,11 @@ Based on this specific experience:
 - Service: ${service} — ${serviceDescriptor}
 - Came with: ${vibe} — ${vibeDescriptor}
 
-Write a Google review exactly the way that person would write it — maximum 2-3 sentences, casual and direct. The way someone talks who came to eat without pretensions — straightforward, no exaggerating, not sounding like a 5-star hotel review.
+Write a Google review exactly the way that person would write it. Between 2 and 3 sentences, with a total of between 25 and 35 words. Casual and direct, the way someone talks who came to eat without pretensions.
 
 Always vary the starting point: sometimes lead with the food, sometimes how you felt walking out, sometimes the service, sometimes something that surprised you.
 
+Never use food critic language like "flavors that transport you", "culinary authenticity", "flavor profiles" or similar.
 Never use phrases that diminish the experience like "nothing special", "it was ok", "decent" or similar.
 
 No emojis. No dashes of any kind including em dashes and hyphens used as punctuation. No quotes. No dish names. No restaurant name. Only the review text.`;
