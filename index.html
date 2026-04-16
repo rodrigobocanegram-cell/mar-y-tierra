@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leave a Review – Mar y Tierra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --gold: #C9A96E;
+  --gold-light: #E8D5B0;
+  --gold-dim: rgba(201,169,110,0.15);
+  --bg: #0A0A0A;
+  --surface: rgba(255,255,255,0.04);
+  --border: rgba(201,169,110,0.18);
+  --text: #F7F3EE;
+  --muted: #8A8078;
+  --green: #4a7c59;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Jost', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px 40px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Atmospheric background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(201,169,110,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(201,169,110,0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── HEADER ── */
+.header {
+  text-align: center;
+  margin-bottom: 18px;
+  animation: fadeDown 0.6s ease both;
+}
+
+.logo-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.logo-line::before { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold)); }
+.logo-line::after  { content: ''; flex: 1; height: 1px; background: linear-gradient(to left,  transparent, var(--gold)); }
+.diamond { width: 6px; height: 6px; background: var(--gold); transform: rotate(45deg); }
+
+h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(24px, 7vw, 34px);
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+  color: var(--text);
+}
+h1 em { font-style: italic; color: var(--gold-light); }
+
+.restaurant-name {
+  margin-top: 5px;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tagline {
+  margin-top: 10px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--gold-light);
+  opacity: 0.85;
+}
+
+/* Review counter badge */
+.review-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 6px 14px;
+  background: var(--gold-dim);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+}
+.counter-dot {
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+/* Lang toggle */
+.lang-toggle {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 14px;
+}
+.lang-btn {
+  padding: 5px 18px;
+  border-radius: 40px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  border: 1px solid rgba(201,169,110,0.3);
+  background: transparent;
+  color: var(--muted);
+  transition: all 0.25s;
+}
+.lang-btn.active {
+  background: var(--gold);
+  color: #0A0A0A;
+  border-color: var(--gold);
+  font-weight: 500;
+}
+
+/* Steps hint */
+.steps-hint {
+  text-align: center;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.6s 0.15s ease both;
+}
+.card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+}
+
+.section-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(201,169,110,0.2);
+}
+
+/* Stars display */
+.stars-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.star {
+  color: var(--gold);
+  font-size: 15px;
+  animation: starIn 0.4s ease both;
+}
+.star:nth-child(1) { animation-delay: 0.05s; }
+.star:nth-child(2) { animation-delay: 0.1s; }
+.star:nth-child(3) { animation-delay: 0.15s; }
+.star:nth-child(4) { animation-delay: 0.2s; }
+.star:nth-child(5) { animation-delay: 0.25s; }
+@keyframes starIn {
+  from { opacity: 0; transform: scale(0.4) rotate(-30deg); }
+  to   { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+.stars-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+/* Textarea */
+#review-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--text);
+  width: 100%;
+  min-height: 108px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 2px;
+  padding: 12px 14px;
+  resize: none;
+  outline: none;
+  transition: border-color 0.3s;
+}
+#review-text:focus { border-color: rgba(201,169,110,0.4); }
+#review-text[readonly] { cursor: default; }
+
+.btn-edit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 7px 14px;
+  background: rgba(201,169,110,0.08);
+  border: 1px solid rgba(201,169,110,0.45);
+  border-radius: 2px;
+  color: var(--gold-light);
+  font-family: 'Jost', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-edit:hover { background: rgba(201,169,110,0.18); border-color: var(--gold); color: var(--gold); }
+.btn-edit.active { color: var(--gold); border-color: var(--gold); background: rgba(201,169,110,0.15); }
+
+
+
+/* ── BUTTONS ── */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 20px;
+  border: none;
+  border-radius: 2px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.22s;
+  width: 100%;
+  position: relative;
+}
+
+.step-num {
+  position: absolute;
+  left: 16px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 22px;
+  line-height: 1;
+  opacity: 0.75;
+}
+
+.btn-copy {
+  background: var(--gold);
+  color: #0A0A0A;
+}
+.btn-copy:hover { background: var(--gold-light); transform: translateY(-1px); }
+.btn-copy:active { transform: translateY(0); }
+
+.btn-maps {
+  background: #ffffff;
+  color: #1a1a1a;
+  transition: all 0.3s;
+}
+.btn-maps:hover { background: #f0f0f0; transform: translateY(-1px); }
+.btn-maps:active { transform: translateY(0); }
+
+/* Pulse + grow animation on btn-maps after copy */
+.btn-maps.pulse-cta {
+  animation: ctaPulse 0.9s ease 0.2s 3;
+}
+.btn-maps.enlarged {
+  padding: 18px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+}
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); transform: scale(1); }
+  50% { box-shadow: 0 0 0 8px rgba(255,255,255,0.15); transform: scale(1.03); }
+}
+
+.btn-regen {
+  background: transparent;
+  color: var(--gold-light);
+  border: 1px solid rgba(201,169,110,0.35);
+  font-size: 10.5px;
+}
+.btn-regen:hover { background: var(--gold-dim); }
+
+/* Copied badge */
+.copied-badge {
+  display: none;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--green);
+  padding: 9px 0 2px;
+}
+.copied-badge.show { display: block; animation: fadeUp 0.3s ease; }
+
+/* ── PHOTO SECTION ── */
+.photo-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.btn-photo {
+  background: transparent;
+  color: var(--gold-light);
+  border: 1px dashed rgba(201,169,110,0.4);
+  width: 100%;
+  font-size: 11px;
+}
+.btn-photo:hover { background: var(--gold-dim); }
+.photo-hint {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+.photo-preview { display: none; margin-bottom: 10px; border-radius: 2px; overflow: hidden; }
+.photo-preview img { width: 100%; display: block; border-radius: 2px; }
+.btn-retake {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid rgba(255,255,255,0.12);
+  width: 100%;
+  margin-top: 7px;
+  font-size: 10.5px;
+}
+
+/* ── PLATFORM BUTTONS (premium) ── */
+.platform-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.platform-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.platform-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+}
+.platform-btns {
+  display: flex;
+  gap: 8px;
+}
+.btn-platform {
+  flex: 1;
+  padding: 9px 8px;
+  border-radius: 2px;
+  font-family: 'Jost', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: var(--muted);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn-platform:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+  border-color: rgba(255,255,255,0.2);
+}
+
+/* ── THANK YOU SCREEN ── */
+.thankyou-screen {
+  display: none;
+  text-align: center;
+  padding: 30px 10px 20px;
+  animation: fadeUp 0.5s ease;
+}
+.thankyou-screen.show { display: block; }
+.thankyou-icon {
+  font-size: 40px;
+  margin-bottom: 14px;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.thankyou-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold-light);
+  margin-bottom: 8px;
+}
+.thankyou-sub {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+}
+.btn-another {
+  margin-top: 20px;
+  background: transparent;
+  color: var(--gold);
+  border: 1px solid var(--border);
+  padding: 11px 24px;
+  border-radius: 2px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-another:hover { background: var(--gold-dim); }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  margin-top: 24px;
+  animation: fadeUp 0.6s 0.4s ease both;
+}
+.footer-powered {
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(138,128,120,0.4);
+}
+.footer-powered span {
+  color: rgba(201,169,110,0.5);
+  font-weight: 500;
+}
+.footer-restaurant {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: rgba(138,128,120,0.3);
+  margin-top: 4px;
+}
+
+/* ── QUESTIONNAIRE SCREEN ── */
+.quiz-screen {
+  animation: fadeUp 0.5s ease both;
+}
+.quiz-screen.hidden { display: none; }
+
+.quiz-question {
+  margin-bottom: 18px;
+}
+.quiz-q-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.quiz-q-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(201,169,110,0.2);
+}
+.quiz-q-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+.quiz-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.quiz-opt {
+  padding: 8px 16px;
+  border-radius: 40px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  border: 1px solid rgba(201,169,110,0.3);
+  background: transparent;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+.quiz-opt:hover { border-color: var(--gold); color: var(--gold-light); }
+.quiz-opt.selected {
+  background: var(--gold);
+  color: #0A0A0A;
+  border-color: var(--gold);
+  font-weight: 500;
+}
+
+.btn-generate {
+  background: var(--gold);
+  color: #0A0A0A;
+  margin-top: 6px;
+  opacity: 0.4;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.2s;
+}
+.btn-generate.ready {
+  opacity: 1;
+  pointer-events: all;
+}
+.btn-generate.ready:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+/* ── REVIEW SCREEN ── */
+.review-screen { }
+.review-screen.hidden { display: none; }
+
+/* ── GENERATING STATE - DOTS ── */
+.generating-state {
+  display: none;
+  text-align: center;
+  padding: 36px 0 20px;
+}
+.generating-state.show { display: block; animation: fadeUp 0.3s ease; }
+.generating-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--gold-light);
+  opacity: 0.9;
+}
+.dots span {
+  display: inline-block;
+  animation: dotBounce 1.4s ease-in-out infinite;
+  font-size: 22px;
+  color: var(--gold);
+  margin: 0 2px;
+}
+.dots span:nth-child(2) { animation-delay: 0.2s; }
+.dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dotBounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.3; }
+  40% { transform: translateY(-8px); opacity: 1; }
+}
+
+/* ── WELCOME BANNER ── */
+.welcome-banner {
+  background: var(--gold-dim);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 14px 18px;
+  text-align: center;
+  margin-bottom: 12px;
+  animation: fadeUp 0.5s ease both;
+}
+.welcome-banner p {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: var(--gold-light);
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+/* ── FOOTER UPSTARI ── */
+.footer-upstari {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.footer-upstari:hover { opacity: 0.9; }
+.footer-upstari-text {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: lowercase;
+  color: var(--muted);
+}
+.footer-upstari-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-line"><div class="diamond"></div></div>
+    <h1 id="title-text">Leave a <em>Review</em></h1>
+    <p class="restaurant-name">Mar y Tierra · Miami</p>
+    <p class="tagline" id="tagline-text">Thank you for dining with us today!</p>
+
+    <div class="review-counter">
+      <div class="counter-dot"></div>
+      <span id="counter-text">Loading reviews...</span>
+    </div>
+
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')">🇺🇸 English</button>
+      <button class="lang-btn" onclick="setLang('es')">🇪🇸 Español</button>
+    </div>
+  </div>
+
+  <!-- STEPS HINT -->
+  <p class="steps-hint" id="steps-hint">3 quick questions · takes 60 seconds</p>
+
+  <!-- WELCOME BANNER -->
+  <div class="welcome-banner" id="welcome-banner">
+    <p id="welcome-text">Answer 3 quick questions and we'll write your review for you — ready to copy & paste.</p>
+  </div>
+
+  <!-- QUESTIONNAIRE CARD -->
+  <div class="card quiz-screen" id="quiz-screen">
+
+    <!-- Q1: Food -->
+    <div class="quiz-question">
+      <div class="quiz-q-label" id="q1-label">Food</div>
+      <div class="quiz-q-text" id="q1-text">How was your food?</div>
+      <div class="quiz-options" id="q1-opts">
+        <button class="quiz-opt" data-q="food" data-val="delicious" onclick="selectOpt(this)">😍 Delicious</button>
+        <button class="quiz-opt" data-q="food" data-val="very good" onclick="selectOpt(this)">😋 Very Good</button>
+        <button class="quiz-opt" data-q="food" data-val="good" onclick="selectOpt(this)">👍 Good</button>
+      </div>
+    </div>
+
+    <!-- Q2: Service -->
+    <div class="quiz-question">
+      <div class="quiz-q-label" id="q2-label">Service</div>
+      <div class="quiz-q-text" id="q2-text">How were you treated?</div>
+      <div class="quiz-options" id="q2-opts">
+        <button class="quiz-opt" data-q="service" data-val="excellent" onclick="selectOpt(this)">🤩 Excellent</button>
+        <button class="quiz-opt" data-q="service" data-val="friendly and attentive" onclick="selectOpt(this)">😊 Friendly & Attentive</button>
+        <button class="quiz-opt" data-q="service" data-val="fast and friendly" onclick="selectOpt(this)">⚡ Fast & Friendly</button>
+      </div>
+    </div>
+
+    <!-- Q3: Who -->
+    <div class="quiz-question">
+      <div class="quiz-q-label" id="q3-label">Who</div>
+      <div class="quiz-q-text" id="q3-text">Who did you come with?</div>
+      <div class="quiz-options" id="q3-opts">
+        <button class="quiz-opt" data-q="vibe" data-val="my partner" onclick="selectOpt(this)">👫 My Partner</button>
+        <button class="quiz-opt" data-q="vibe" data-val="my family" onclick="selectOpt(this)">👨‍👩‍👧 Family</button>
+        <button class="quiz-opt" data-q="vibe" data-val="friends" onclick="selectOpt(this)">👯 Friends</button>
+        <button class="quiz-opt" data-q="vibe" data-val="alone" onclick="selectOpt(this)">💼 Solo</button>
+        <button class="quiz-opt" data-q="vibe" data-val="a work lunch" onclick="selectOpt(this)">👔 Work Lunch</button>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-generate" id="btn-generate" onclick="generateAIReview()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span id="generate-btn-text">Generate My Review</span>
+      </button>
+    </div>
+
+  </div><!-- /quiz-screen -->
+
+  <!-- Generating dots (shown during API call) -->
+  <div class="card generating-state" id="generating-state" style="text-align:center; padding: 36px 20px;">
+    <div class="dots"><span>●</span><span>●</span><span>●</span></div>
+    <div class="generating-label" id="generating-label">Writing your review…</div>
+  </div>
+
+  <!-- MAIN REVIEW CARD (hidden until review is generated) -->
+  <div class="card review-screen hidden" id="review-screen">
+    <div class="section-label" id="review-label">Your review</div>
+
+    <!-- 5 Stars -->
+    <div class="stars-row">
+      <span class="star">★</span>
+      <span class="star">★</span>
+      <span class="star">★</span>
+      <span class="star">★</span>
+      <span class="star">★</span>
+      <span class="stars-label" id="stars-label">5 stars · Google</span>
+    </div>
+
+    <textarea id="review-text" rows="4" spellcheck="false" readonly style="overflow:hidden; resize:none;"></textarea>
+    <button class="btn-edit" id="btn-edit" onclick="enableEdit()">
+      <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <span id="edit-btn-text">Edit Review</span>
+    </button>
+
+    <div class="actions">
+      <!-- Copy button -->
+      <button class="btn btn-copy" id="btn-copy" onclick="copyReview()" style="padding: 17px 20px; font-size: 13px;">
+        <span id="copy-btn-text">Copy Review</span>
+      </button>
+
+      <!-- Google button -->
+      <button class="btn btn-maps" id="btn-maps" onclick="openGoogle()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335"/>
+          <circle cx="12" cy="9" r="2.5" fill="#fff"/>
+        </svg>
+        <span id="maps-btn-text">Paste it on Google</span>
+      </button>
+
+      <!-- Regen — same answers, new review -->
+      <button class="btn btn-regen" id="btn-regen" onclick="generateAIReview()">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        <span id="regen-btn-text">Regenerate Review</span>
+      </button>
+    </div>
+
+    <!-- Thank you screen (hidden until maps clicked) -->
+    <div class="thankyou-screen" id="thankyou-screen">
+      <div class="thankyou-icon">🙏</div>
+      <div class="thankyou-title" id="ty-title">Thank you so much!</div>
+      <p class="thankyou-sub" id="ty-sub">Your review means the world to us.<br>See you again soon.</p>
+      <button class="btn-another" onclick="resetFlow()" id="ty-btn">Leave Another Review</button>
+    </div>
+
+    <!-- PHOTO -->
+    <div class="photo-section" id="photo-section">
+      <div class="section-label" id="photo-label">Add a photo</div>
+      <div class="photo-preview" id="photo-preview"><img id="photo-img"/></div>
+      <input type="file" id="camera-input" accept="image/*" style="display:none;" onchange="handlePhoto(event)"/>
+      <button class="btn btn-photo" id="btn-photo" onclick="openCamera()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+        <span id="photo-btn-text">Take a Photo to Add to Your Review</span>
+      </button>
+      <p class="photo-hint" id="photo-hint">Photos increase review impact by 35% — snap one with your server!</p>
+    </div>
+
+    <!-- OTHER PLATFORMS -->
+    <div class="platform-section">
+      <div class="platform-label" id="platform-label">Also review us on</div>
+      <div class="platform-btns">
+        <button class="btn-platform" onclick="openYelp()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="#FF1A1A"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+          Yelp
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <a href="https://upstari.com" target="_blank" class="footer-upstari">
+      <span class="footer-upstari-text">powered by</span>
+      <span class="footer-upstari-logo"><em>Upstari</em></span>
+    </a>
+    <div class="footer-restaurant">Mar y Tierra Restaurant · Downtown Miami</div>
+  </div>
+
+</div><!-- /container -->
+
+<script type="module">
+// ── CONFIG ──
+const GOOGLE_URL    = "https://search.google.com/local/writereview?placeid=ChIJIZedcp622YgR_44emCOFlF4";
+const YELP_URL      = "https://www.yelp.com/biz/mar-y-tierra-miami";
+const COUNTER_KEY   = "myt_review_count";
+const RESTAURANT_ID = "mar-y-tierra";
+
+let currentLang = 'en';
+let copiedDone  = false;
+let db = null;
+
+// ── FIREBASE ──
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDj_X5gPMHUcS_cIj4YNJhv0cSe8El89fI",
+  authDomain: "mar-y-tierra-81467.firebaseapp.com",
+  projectId: "mar-y-tierra-81467",
+  storageBucket: "mar-y-tierra-81467.firebasestorage.app",
+  messagingSenderId: "978413524273",
+  appId: "1:978413524273:web:50109567dbd668dfd10c10"
+};
+
+try {
+  const app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+} catch(e) { console.log('Firebase init error:', e); }
+
+// ── TRACKING ──
+async function trackEvent(type) {
+  try {
+    if (db) {
+      await addDoc(collection(db, 'events'), {
+        restaurant: RESTAURANT_ID,
+        type,
+        lang: currentLang,
+        ts: Timestamp.now()
+      });
+    }
+  } catch(e) { console.log('Track error:', e); }
+}
+
+// ── COUNTER ──
+function getCount() {
+  try { return 57 + parseInt(localStorage.getItem(COUNTER_KEY) || '0'); } catch(e) { return 57; }
+}
+function incrementCount() {
+  try {
+    const n = getCount() + 1;
+    localStorage.setItem(COUNTER_KEY, n);
+    return n;
+  } catch(e) { return 1; }
+}
+function renderCounter(n) {
+  const el = document.getElementById('counter-text');
+  const tx = t[currentLang];
+  el.textContent = n + ' ' + (n === 1 ? tx.counterSingle : tx.counterPlural);
+}
+
+// ── TRANSLATIONS ──
+const t = {
+  en: {
+    title: 'Leave a <em>Review</em>',
+    tagline: 'Thank you for dining with us today!',
+    stepsHint: '3 quick questions · takes 60 seconds',
+    welcomeText: 'Answer these 3 questions and we\'ll help with your review.',
+    generatingText: 'Getting your review ready, just a few seconds...',
+    reviewReadyText: 'Your review is ready! Feel free to edit it, or copy and paste it on Google.',
+    reviewLabel: 'Your review',
+    starsLabel: '5 stars · Google',
+    copyBtn: 'Copy Review',
+    mapsBtn: 'Paste it on Google',
+    regenBtn: 'Regenerate Review',
+    copiedBadge: '✓ Copied — now tap the button above to paste it on Google',
+    photoLabel: 'Add a photo',
+    photoBtn: 'Take a Photo to Add to Your Review',
+    photoHint: 'Photos increase review impact by 35% — snap one with your server!',
+    photoTaken: 'Press and hold to save · then upload it on Google Maps',
+    retakeBtn: 'Retake',
+    platformLabel: 'Also review us on',
+    counterSingle: 'review generated this month',
+    counterPlural: 'reviews generated this month',
+    tyTitle: 'Thank you so much!',
+    tySub: 'Your review means the world to us.\nSee you again soon.',
+    tyBtn: 'Leave Another Review',
+    editBtn: 'Edit Review',
+    editingLabel: 'Editing...',
+    generateBtn: 'Generate My Review',
+    generatingLabel: 'Working on your review…',
+    q1Label: 'Food', q1Text: 'How was your food?',
+    q1Opts: ['😍 Delicious', '😋 Very Good', '👍 Good'],
+    q1Vals: ['delicious', 'very good', 'good'],
+    q2Label: 'Service', q2Text: 'How were you treated?',
+    q2Opts: ['🤩 Excellent', '😊 Friendly & Attentive', '⚡ Fast & Friendly'],
+    q2Vals: ['excellent', 'friendly and attentive', 'fast and friendly'],
+    q3Label: 'Who', q3Text: 'Who did you come with?',
+    q3Opts: ['👫 My Partner', '👨‍👩‍👧 Family', '👯 Friends', '💼 Solo', '👔 Work Lunch'],
+    q3Vals: ['my partner', 'my family', 'friends', 'alone', 'a work lunch'],
+  },
+  es: {
+    title: 'Deja tu <em>Reseña</em>',
+    tagline: '¡Gracias por visitarnos hoy!',
+    stepsHint: '3 preguntas rápidas · solo 60 segundos',
+    welcomeText: 'Responde estas 3 preguntas y te ayudamos con tu reseña.',
+    generatingText: 'Estamos preparando tu reseña, solo tomará unos segundos...',
+    reviewReadyText: '¡Tu reseña está lista! Puedes editarla si quieres, o cópiala y pégala en Google.',
+    reviewLabel: 'Tu reseña',
+    starsLabel: '5 estrellas · Google',
+    copyBtn: 'Copiar Reseña',
+    mapsBtn: 'Pégala en Google',
+    regenBtn: 'Regenerar Reseña',
+    copiedBadge: '✓ Copiado — ahora toca el botón de arriba para pegarla en Google',
+    photoLabel: 'Agrega una foto',
+    photoBtn: 'Tomar Foto para tu Reseña',
+    photoHint: 'Las fotos aumentan el impacto 35% — ¡tómate una con tu mesero!',
+    photoTaken: 'Mantén presionada para guardar · luego súbela en Google Maps',
+    retakeBtn: 'Repetir',
+    platformLabel: 'También reseñanos en',
+    counterSingle: 'reseña generada este mes',
+    counterPlural: 'reseñas generadas este mes',
+    tyTitle: '¡Muchas gracias!',
+    tySub: 'Tu reseña significa mucho para nosotros.\nHasta pronto.',
+    tyBtn: 'Dejar Otra Reseña',
+    editBtn: 'Editar Reseña',
+    editingLabel: 'Editando...',
+    generateBtn: 'Generar mi Reseña',
+    generatingLabel: 'Preparando tu reseña…',
+    q1Label: 'Comida', q1Text: '¿Cómo estuvo tu plato?',
+    q1Opts: ['😍 Delicioso', '😋 Muy bueno', '👍 Bueno'],
+    q1Vals: ['delicioso', 'muy bueno', 'bueno'],
+    q2Label: 'Servicio', q2Text: '¿Cómo te atendieron?',
+    q2Opts: ['🤩 Excelente', '😊 Amable y atento', '⚡ Rápido y amable'],
+    q2Vals: ['excelente', 'amable y atento', 'rápido y amable'],
+    q3Label: '¿Con quién?', q3Text: '¿Con quién viniste?',
+    q3Opts: ['👫 Mi pareja', '👨‍👩‍👧 Familia', '👯 Amigos', '💼 Solo', '👔 Almuerzo de trabajo'],
+    q3Vals: ['mi pareja', 'mi familia', 'amigos', 'solo', 'un almuerzo de trabajo'],
+  }
+};
+
+
+// ── LANGUAGE ──
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach((b, i) =>
+    b.classList.toggle('active', (i === 0 && lang === 'en') || (i === 1 && lang === 'es'))
+  );
+  const tx = t[lang];
+  document.getElementById('title-text').innerHTML = tx.title;
+  document.getElementById('tagline-text').textContent = tx.tagline;
+  document.getElementById('steps-hint').textContent = tx.stepsHint;
+  document.getElementById('review-label').textContent = tx.reviewLabel;
+  document.getElementById('stars-label').textContent = tx.starsLabel;
+  document.getElementById('copy-btn-text').textContent = tx.copyBtn;
+  document.getElementById('maps-btn-text').textContent = tx.mapsBtn;
+  document.getElementById('regen-btn-text').textContent = tx.regenBtn;
+  document.getElementById('photo-label').textContent = tx.photoLabel;
+  document.getElementById('photo-btn-text').textContent = tx.photoBtn;
+  document.getElementById('photo-hint').textContent = tx.photoHint;
+  document.getElementById('platform-label').textContent = tx.platformLabel;
+  document.getElementById('ty-title').textContent = tx.tyTitle;
+  document.getElementById('ty-sub').textContent = tx.tySub;
+  document.getElementById('ty-btn').textContent = tx.tyBtn;
+  document.getElementById('edit-btn-text').textContent = tx.editBtn;
+  document.getElementById('welcome-text').textContent = tx.welcomeText;
+  document.getElementById('generate-btn-text').textContent = tx.generateBtn;
+  document.getElementById('generating-label').textContent = tx.generatingLabel;
+
+  // Update quiz labels and options
+  document.getElementById('q1-label').textContent = tx.q1Label;
+  document.getElementById('q1-text').textContent = tx.q1Text;
+  document.getElementById('q2-label').textContent = tx.q2Label;
+  document.getElementById('q2-text').textContent = tx.q2Text;
+  document.getElementById('q3-label').textContent = tx.q3Label;
+  document.getElementById('q3-text').textContent = tx.q3Text;
+
+  // Re-render option buttons for each question
+  [
+    { id: 'q1-opts', opts: tx.q1Opts, vals: tx.q1Vals, q: 'food' },
+    { id: 'q2-opts', opts: tx.q2Opts, vals: tx.q2Vals, q: 'service' },
+    { id: 'q3-opts', opts: tx.q3Opts, vals: tx.q3Vals, q: 'vibe' },
+  ].forEach(({ id, opts, vals, q }) => {
+    const container = document.getElementById(id);
+    container.innerHTML = '';
+    opts.forEach((label, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-opt';
+      btn.dataset.q = q;
+      btn.dataset.val = vals[i];
+      btn.textContent = label;
+      btn.onclick = () => selectOpt(btn);
+      if (answers[q] === vals[i]) btn.classList.add('selected');
+      container.appendChild(btn);
+    });
+  });
+
+  renderCounter(getCount());
+}
+
+// ── EDIT ──
+function enableEdit() {
+  const ta = document.getElementById('review-text');
+  const btn = document.getElementById('btn-edit');
+  ta.removeAttribute('readonly');
+  ta.focus();
+  btn.classList.add('active');
+  const tx = t[currentLang];
+  document.getElementById('edit-btn-text').textContent = tx.editingLabel || 'Editing...';
+}
+
+// ── QUIZ STATE ──
+const answers = { food: null, service: null, vibe: null };
+
+function selectOpt(btn) {
+  const q = btn.dataset.q;
+  const val = btn.dataset.val;
+  // deselect siblings
+  document.querySelectorAll(`.quiz-opt[data-q="${q}"]`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[q] = val;
+  checkQuizReady();
+}
+
+function checkQuizReady() {
+  const ready = answers.food && answers.service && answers.vibe;
+  const btn = document.getElementById('btn-generate');
+  btn.classList.toggle('ready', !!ready);
+}
+
+function backToQuiz() {
+  document.getElementById('review-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  document.getElementById('thankyou-screen').classList.remove('show');
+  document.getElementById('photo-section').style.display = '';
+  document.getElementById('welcome-text').textContent = t[currentLang].welcomeText;
+  copiedDone = false;
+}
+
+// ── AI REVIEW GENERATION ──
+async function generateAIReview() {
+  if (!answers.food || !answers.service || !answers.vibe) return;
+
+  const lang = currentLang;
+  const isRegen = !document.getElementById('review-screen').classList.contains('hidden');
+
+  // Reset Google button to original state
+  const mapsBtn = document.getElementById('btn-maps');
+  mapsBtn.style.background = '';
+  mapsBtn.style.color = '';
+  mapsBtn.style.padding = '';
+  mapsBtn.style.fontSize = '';
+  mapsBtn.style.fontWeight = '';
+  mapsBtn.style.boxShadow = '';
+  mapsBtn.querySelector('span').textContent = t[lang].mapsBtn;
+  mapsBtn.classList.remove('pulse-cta');
+
+  // Update banner to generating state
+  document.getElementById('welcome-text').textContent = t[lang].generatingText;
+
+  // Hide quiz, show generating state
+  document.getElementById('quiz-screen').classList.add('hidden');
+  if (isRegen) {
+    document.getElementById('review-screen').classList.add('hidden');
+  }
+  document.getElementById('generating-state').classList.remove('hidden');
+  document.getElementById('generating-state').classList.add('show');
+  document.getElementById('generating-state').style.display = 'block';
+
+  try {
+    const response = await fetch("/.netlify/functions/generate-review", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ food: answers.food, service: answers.service, vibe: answers.vibe, lang })
+    });
+
+    const data = await response.json();
+    const reviewText = data.review || "";
+
+    document.getElementById('generating-state').classList.remove('show');
+    document.getElementById('generating-state').style.display = 'none';
+    document.getElementById('review-screen').classList.remove('hidden');
+    document.getElementById('review-text').value = reviewText;
+    document.getElementById('review-text').setAttribute('readonly', true);
+    document.getElementById('btn-edit').classList.remove('active');
+    document.getElementById('edit-btn-text').textContent = t[lang].editBtn;
+
+    // Update banner to review ready state
+    document.getElementById('welcome-text').textContent = t[lang].reviewReadyText;
+
+    // Auto-resize textarea
+    const ta = document.getElementById('review-text');
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+
+    document.querySelectorAll('.star').forEach((s, i) => {
+      s.style.animation = 'none';
+      s.offsetHeight;
+      s.style.animation = `starIn 0.4s ${0.05 + i * 0.05}s ease both`;
+    });
+
+    document.getElementById('btn-maps').classList.remove('pulse-cta');
+    copiedDone = false;
+    trackEvent('ai_generate');
+
+    // Scroll to welcome banner so client sees "Your review is ready!" first
+    setTimeout(() => {
+      const banner = document.getElementById('welcome-banner');
+      const y = banner.getBoundingClientRect().top + window.pageYOffset - 12;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }, 150);
+
+  } catch(err) {
+    console.error('Claude API error:', err);
+    document.getElementById('generating-state').classList.remove('show');
+    document.getElementById('generating-state').style.display = 'none';
+    document.getElementById('quiz-screen').classList.remove('hidden');
+    document.getElementById('welcome-text').textContent = t[lang].welcomeText;
+    alert(lang === 'es' ? 'Hubo un error generando tu reseña. Intenta de nuevo.' : 'Something went wrong. Please try again.');
+  }
+}
+
+// ── LEGACY: kept for resetFlow ──
+function generateReview() { backToQuiz(); }
+
+// ── COPY ──
+function copyReview() {
+  const text = document.getElementById('review-text').value;
+  navigator.clipboard.writeText(text).then(() => {
+    trackEvent('copy');
+    const btn     = document.getElementById('btn-copy');
+    const mapsBtn = document.getElementById('btn-maps');
+
+    // Copy button turns green
+    btn.style.background = '#4a7c59';
+    btn.style.color = '#fff';
+    btn.style.padding = '13px 20px';
+    btn.querySelector('span:last-child').textContent = currentLang === 'es' ? '✓ ¡Copiado!' : '✓ Copied!';
+    copiedDone = true;
+
+    // Google button turns green, grows, text changes
+    mapsBtn.classList.remove('pulse-cta', 'enlarged');
+    mapsBtn.offsetHeight;
+    mapsBtn.style.background = '#34A853';
+    mapsBtn.style.color = '#fff';
+    mapsBtn.style.padding = '18px 20px';
+    mapsBtn.style.fontSize = '13px';
+    mapsBtn.style.fontWeight = '600';
+    mapsBtn.style.boxShadow = '0 0 0 3px rgba(52,168,83,0.3)';
+    mapsBtn.querySelector('span').textContent = currentLang === 'es' ? '¡Pégala en Google ahora! →' : 'Paste it on Google now! →';
+    mapsBtn.classList.add('pulse-cta');
+
+    setTimeout(() => {
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.padding = '';
+      btn.querySelector('span:last-child').textContent = t[currentLang].copyBtn;
+    }, 3500);
+  }).catch(() => {
+    const ta = document.getElementById('review-text');
+    ta.select();
+    document.execCommand('copy');
+  });
+}
+
+// ── OPEN PLATFORMS ──
+function openGoogle() {
+  trackEvent('google');
+  window.open(GOOGLE_URL, '_blank');
+  if (copiedDone) {
+    setTimeout(() => showThankYou(), 1000);
+    const n = incrementCount();
+    renderCounter(n);
+  }
+}
+function openYelp() { trackEvent('yelp'); window.open(YELP_URL, '_blank'); }
+
+// ── THANK YOU ──
+function showThankYou() {
+  document.getElementById('photo-section').style.display = 'none';
+  const ty = document.getElementById('thankyou-screen');
+  ty.classList.add('show');
+  ty.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function resetFlow() {
+  backToQuiz();
+  copiedDone = false;
+}
+
+// ── PHOTO ──
+function openCamera() {
+  const input = document.getElementById('camera-input');
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if (isIOS) {
+    input.setAttribute('capture', 'environment');
+  } else {
+    input.removeAttribute('capture');
+  }
+  input.click();
+}
+
+function handlePhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  // Usar URL.createObjectURL para mejor compatibilidad en Android
+  const url = URL.createObjectURL(file);
+  const img = document.getElementById('photo-img');
+  img.onload = () => URL.revokeObjectURL(url); // liberar memoria
+  img.src = url;
+
+  document.getElementById('photo-preview').style.display = 'block';
+  document.getElementById('btn-photo').style.display = 'none';
+
+  // Botón retake
+  const existing = document.getElementById('btn-retake');
+  if (!existing) {
+    const retake = document.createElement('button');
+    retake.className = 'btn btn-retake';
+    retake.id = 'btn-retake';
+    retake.onclick = retakePhoto;
+    retake.textContent = t[currentLang].retakeBtn;
+    document.getElementById('photo-hint').before(retake);
+  }
+  document.getElementById('photo-hint').textContent = t[currentLang].photoTaken;
+  document.getElementById('photo-hint').style.color = 'var(--gold)';
+}
+function retakePhoto() {
+  document.getElementById('photo-preview').style.display = 'none';
+  document.getElementById('camera-input').value = '';
+  document.getElementById('btn-photo').style.display = 'flex';
+  const rb = document.getElementById('btn-retake');
+  if (rb) rb.remove();
+  document.getElementById('photo-hint').textContent = t[currentLang].photoHint;
+  document.getElementById('photo-hint').style.color = '';
+}
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  trackEvent('pageview');
+  setLang('en');
+});
+
+// ── EXPOSE FUNCTIONS TO HTML ──
+window.setLang = setLang;
+window.copyReview = copyReview;
+window.openGoogle = openGoogle;
+window.openYelp = openYelp;
+window.generateReview = generateReview;
+window.generateAIReview = generateAIReview;
+window.backToQuiz = backToQuiz;
+window.selectOpt = selectOpt;
+window.enableEdit = enableEdit;
+window.openCamera = openCamera;
+window.handlePhoto = handlePhoto;
+window.retakePhoto = retakePhoto;
+window.resetFlow = resetFlow;
+</script>
+</body>
+</html>
