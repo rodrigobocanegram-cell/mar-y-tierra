@@ -987,6 +987,18 @@ const t = {
 
 // ── LANGUAGE ──
 function setLang(lang) {
+  // Remap stored answers from old language to new language (index-based)
+  if (lang !== currentLang) {
+    const oldTx = t[currentLang];
+    const newTx = t[lang];
+    [['food','q1Vals'], ['service','q2Vals'], ['vibe','q3Vals']].forEach(([q, key]) => {
+      if (answers[q] !== null) {
+        const idx = oldTx[key].indexOf(answers[q]);
+        if (idx !== -1) answers[q] = newTx[key][idx];
+      }
+    });
+  }
+
   currentLang = lang;
   document.querySelectorAll('.lang-btn').forEach((b, i) =>
     b.classList.toggle('active', (i === 0 && lang === 'en') || (i === 1 && lang === 'es'))
@@ -1041,6 +1053,13 @@ function setLang(lang) {
   });
 
   renderCounter(getCount());
+  updateRegenCounter();
+
+  // If review is already showing, regenerate in the new language (doesn't count against limit)
+  const reviewVisible = !document.getElementById('review-screen').classList.contains('hidden');
+  if (reviewVisible && answers.food && answers.service && answers.vibe) {
+    generateAIReview(true);
+  }
 }
 
 // ── EDIT ──
@@ -1103,13 +1122,13 @@ function updateRegenCounter() {
 }
 
 // ── AI REVIEW GENERATION ──
-async function generateAIReview() {
+async function generateAIReview(skipRegenCount = false) {
   if (!answers.food || !answers.service || !answers.vibe) return;
 
   const lang = currentLang;
   const isRegen = !document.getElementById('review-screen').classList.contains('hidden');
 
-  if (isRegen) {
+  if (isRegen && !skipRegenCount) {
     const used = parseInt(sessionStorage.getItem('regenCount') || '0');
     if (used >= MAX_REGEN) return;
     sessionStorage.setItem('regenCount', used + 1);
