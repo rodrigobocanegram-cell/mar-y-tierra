@@ -339,6 +339,15 @@ h1 em { font-style: italic; color: var(--gold-light); }
   font-size: 10.5px;
 }
 .btn-regen:hover { background: var(--gold-dim); }
+.btn-regen:disabled { opacity: 0.35; cursor: not-allowed; }
+.regen-counter {
+  display: block;
+  text-align: center;
+  font-size: 10px;
+  color: rgba(201,169,110,0.55);
+  margin-top: 6px;
+  letter-spacing: 0.02em;
+}
 
 /* Copied badge */
 .copied-badge {
@@ -785,6 +794,7 @@ h1 em { font-style: italic; color: var(--gold-light); }
         </svg>
         <span id="regen-btn-text">Regenerate Review</span>
       </button>
+      <span id="regen-counter" class="regen-counter"></span>
     </div>
 
     <!-- Thank you screen (hidden until maps clicked) -->
@@ -1072,12 +1082,38 @@ function backToQuiz() {
   copiedDone = false;
 }
 
+// ── REGEN COUNTER ──
+const MAX_REGEN = 10;
+
+function updateRegenCounter() {
+  const used = parseInt(sessionStorage.getItem('regenCount') || '0');
+  const left = MAX_REGEN - used;
+  const btn = document.getElementById('btn-regen');
+  const counter = document.getElementById('regen-counter');
+  const lang = currentLang || 'en';
+  if (left <= 0) {
+    btn.disabled = true;
+    counter.textContent = lang === 'es' ? 'Sin intentos restantes' : 'No more attempts';
+  } else {
+    btn.disabled = false;
+    counter.textContent = lang === 'es'
+      ? `${left} intento${left === 1 ? '' : 's'} restante${left === 1 ? '' : 's'}`
+      : `${left} attempt${left === 1 ? '' : 's'} left`;
+  }
+}
+
 // ── AI REVIEW GENERATION ──
 async function generateAIReview() {
   if (!answers.food || !answers.service || !answers.vibe) return;
 
   const lang = currentLang;
   const isRegen = !document.getElementById('review-screen').classList.contains('hidden');
+
+  if (isRegen) {
+    const used = parseInt(sessionStorage.getItem('regenCount') || '0');
+    if (used >= MAX_REGEN) return;
+    sessionStorage.setItem('regenCount', used + 1);
+  }
 
   // Reset Google button to original state
   const mapsBtn = document.getElementById('btn-maps');
@@ -1137,6 +1173,7 @@ async function generateAIReview() {
     document.getElementById('btn-maps').classList.remove('pulse-cta');
     copiedDone = false;
     trackEvent('ai_generate');
+    updateRegenCounter();
 
     // Scroll to welcome banner so client sees "Your review is ready!" first
     setTimeout(() => {
