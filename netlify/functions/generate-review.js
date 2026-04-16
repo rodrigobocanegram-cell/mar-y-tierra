@@ -1,10 +1,49 @@
+const ALLOWED_VALUES = {
+  lang: ['es', 'en'],
+  food: {
+    es: ['delicioso', 'muy bueno', 'bueno'],
+    en: ['delicious', 'very good', 'good']
+  },
+  service: {
+    es: ['excelente', 'amable y atento', 'rápido y amable'],
+    en: ['excellent', 'friendly and attentive', 'fast and friendly']
+  },
+  vibe: {
+    es: ['mi pareja', 'mi familia', 'amigos', 'solo', 'un almuerzo de trabajo'],
+    en: ['my partner', 'my family', 'friends', 'alone', 'a work lunch']
+  }
+};
+
+const ALLOWED_ORIGINS = [
+  'https://upstari.com',
+  'https://www.upstari.com',
+  'https://qrupstari.netlify.app'
+];
+
 exports.handler = async function(event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
+  const origin = event.headers.origin || '';
+  const corsOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+
   try {
     const { food, service, vibe, lang } = JSON.parse(event.body);
+
+    // Whitelist validation — reject anything not in the allowed lists
+    const validLang    = ALLOWED_VALUES.lang.includes(lang) ? lang : 'en';
+    const validFood    = ALLOWED_VALUES.food[validLang].includes(food);
+    const validService = ALLOWED_VALUES.service[validLang].includes(service);
+    const validVibe    = ALLOWED_VALUES.vibe[validLang].includes(vibe);
+
+    if (!validFood || !validService || !validVibe) {
+      return {
+        statusCode: 400,
+        headers: { 'Access-Control-Allow-Origin': corsOrigin },
+        body: JSON.stringify({ error: 'Invalid input values' })
+      };
+    }
 
     // ── SUBDESCRIPTORS ──
     const descriptors = {
@@ -218,13 +257,14 @@ No emojis. No dashes of any kind including em dashes and hyphens used as punctua
 
     return {
       statusCode: 200,
-      headers: { 'Access-Control-Allow-Origin': '*' },
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': corsOrigin },
       body: JSON.stringify({ review: reviewText })
     };
 
   } catch (err) {
     return {
       statusCode: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': corsOrigin },
       body: JSON.stringify({ error: 'Error generating review' })
     };
   }
