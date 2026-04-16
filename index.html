@@ -1054,12 +1054,6 @@ function setLang(lang) {
 
   renderCounter(getCount());
   updateRegenCounter();
-
-  // If review is already showing, regenerate in the new language (doesn't count against limit)
-  const reviewVisible = !document.getElementById('review-screen').classList.contains('hidden');
-  if (reviewVisible && answers.food && answers.service && answers.vibe) {
-    generateAIReview(true);
-  }
 }
 
 // ── EDIT ──
@@ -1122,13 +1116,13 @@ function updateRegenCounter() {
 }
 
 // ── AI REVIEW GENERATION ──
-async function generateAIReview(skipRegenCount = false) {
+async function generateAIReview() {
   if (!answers.food || !answers.service || !answers.vibe) return;
 
   const lang = currentLang;
   const isRegen = !document.getElementById('review-screen').classList.contains('hidden');
 
-  if (isRegen && !skipRegenCount) {
+  if (isRegen) {
     const used = parseInt(sessionStorage.getItem('regenCount') || '0');
     if (used >= MAX_REGEN) return;
     sessionStorage.setItem('regenCount', used + 1);
