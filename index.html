@@ -1268,8 +1268,10 @@ function showThankYou() {
   ty.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 function resetFlow() {
+  sessionStorage.removeItem('regenCount');
   backToQuiz();
   copiedDone = false;
+  updateRegenCounter();
 }
 
 // ── PHOTO ──
