@@ -17,7 +17,8 @@ const ALLOWED_VALUES = {
 const ALLOWED_ORIGINS = [
   'https://upstari.com',
   'https://www.upstari.com',
-  'https://qrupstari.netlify.app'
+  'https://qrupstari.netlify.app',
+  'https://marytierradowntown.netlify.app'
 ];
 
 exports.handler = async function(event) {
