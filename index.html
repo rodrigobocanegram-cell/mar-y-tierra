@@ -95,11 +95,11 @@ h1 em { font-style: italic; color: var(--terra); }
 
 .tagline {
   margin-top: 10px;
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 14px;
-  color: var(--gold);
-  opacity: 0.9;
+  font-family: 'Jost', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  color: #8A6A30;
 }
 
 /* Review counter badge */
@@ -246,15 +246,15 @@ h1 em { font-style: italic; color: var(--terra); }
 #review-text:focus { border-color: var(--gold); }
 #review-text[readonly] { cursor: default; }
 @keyframes borderPulse {
-  0%, 100% { border-color: var(--border); box-shadow: 0 0 0 0 rgba(201,169,110,0); }
-  50% { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(201,169,110,0.2); }
+  0%, 100% { border-color: var(--border); border-width: 1.5px; box-shadow: none; background: #FAF7F2; }
+  50% { border-color: var(--terra); border-width: 2px; box-shadow: 0 0 0 6px rgba(139,46,26,0.25); background: #FFF3EE; }
 }
-#review-text.pulse-border { animation: borderPulse 0.9s ease-in-out 3; }
+#review-text.pulse-border { animation: borderPulse 0.8s ease-in-out 4; }
 @keyframes copyGlow {
-  0%, 100% { box-shadow: 0 2px 8px rgba(139,46,26,0.2); }
-  50% { box-shadow: 0 0 0 6px rgba(139,46,26,0.2); }
+  0%, 100% { box-shadow: 0 2px 8px rgba(139,46,26,0.2); transform: scale(1); }
+  50% { box-shadow: 0 0 0 10px rgba(139,46,26,0.3); transform: scale(1.04); }
 }
-.btn-copy.pulse-cta-copy { animation: copyGlow 0.9s ease-in-out 3; }
+.btn-copy.pulse-cta-copy { animation: copyGlow 0.8s ease-in-out infinite; }
 
 .btn-edit {
   display: inline-flex;
@@ -786,7 +786,7 @@ h1 em { font-style: italic; color: var(--terra); }
     <div class="logo-line"><div class="diamond"></div></div>
     <h1 id="title-text">How was <em>everything?</em></h1>
     <p class="restaurant-name">Mar y Tierra · Miami</p>
-    <p class="tagline" id="tagline-text">Thank you for dining with us today!</p>
+    <p class="tagline" id="tagline-text">Supporting a local business has never been this easy</p>
 
     <div class="lang-toggle">
       <button class="lang-btn active" onclick="setLang('en')">🇺🇸 English</button>
@@ -1025,7 +1025,7 @@ function renderCounter(n) {
 const t = {
   en: {
     title: 'How was <em>everything?</em>',
-    tagline: 'Thank you for dining with us today!',
+    tagline: 'Supporting a local business has never been this easy',
     stepsHint: '3 quick questions · takes 60 seconds',
     welcomeText: 'Answer these 3 questions and we\'ll help with your review.',
     generatingText: 'Getting your review ready, just a few seconds...',
@@ -1063,7 +1063,7 @@ const t = {
   },
   es: {
     title: '¿Cómo estuvo <em>todo?</em>',
-    tagline: '¡Gracias por visitarnos hoy!',
+    tagline: 'Nunca fue tan fácil apoyar a un negocio local',
     stepsHint: '3 preguntas rápidas · solo 60 segundos',
     welcomeText: 'Responde estas 3 preguntas y te ayudamos con tu reseña.',
     generatingText: 'Estamos preparando tu reseña, solo tomará unos segundos...',
@@ -1341,15 +1341,13 @@ async function generateAIReview() {
     trackEvent('ai_generate');
     updateRegenCounter();
 
-    // Pulse textarea border for 2.7s, then transfer glow to copy button
+    // Textarea pulses 4× (3.2s), then copy button pulses infinitely until pressed
     const ta2 = document.getElementById('review-text');
     ta2.classList.add('pulse-border');
     setTimeout(() => {
       ta2.classList.remove('pulse-border');
-      const copyBtn = document.getElementById('btn-copy');
-      copyBtn.classList.add('pulse-cta-copy');
-      setTimeout(() => copyBtn.classList.remove('pulse-cta-copy'), 2700);
-    }, 2700);
+      document.getElementById('btn-copy').classList.add('pulse-cta-copy');
+    }, 3200);
 
     // Scroll to welcome banner so client sees "Your review is ready!" first
     setTimeout(() => {
@@ -1378,6 +1376,8 @@ function copyReview() {
     trackEvent('copy');
     const btn     = document.getElementById('btn-copy');
     const mapsBtn = document.getElementById('btn-maps');
+
+    btn.classList.remove('pulse-cta-copy');
 
     // Copy button turns green
     btn.style.background = '#4a7c59';
