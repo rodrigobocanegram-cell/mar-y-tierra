@@ -991,14 +991,15 @@ try {
 } catch(e) { console.log('Firebase init error:', e); }
 
 // ── TRACKING ──
-async function trackEvent(type) {
+async function trackEvent(type, extraData = {}) {
   try {
     if (db) {
       await addDoc(collection(db, 'events'), {
         restaurant: RESTAURANT_ID,
         type,
         lang: currentLang,
-        ts: Timestamp.now()
+        ts: Timestamp.now(),
+        ...extraData
       });
     }
   } catch(e) { console.log('Track error:', e); }
@@ -1338,7 +1339,7 @@ async function generateAIReview() {
 
     document.getElementById('btn-maps').classList.remove('pulse-cta');
     copiedDone = false;
-    trackEvent('ai_generate');
+    trackEvent('ai_generate', { food: answers.food, service: answers.service, vibe: answers.vibe });
     updateRegenCounter();
 
     // Textarea pulses 4× (3.2s), then copy button pulses infinitely until pressed
