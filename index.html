@@ -721,18 +721,27 @@ h1 em { font-style: italic; color: var(--terra); }
 .paste-overlay-box {
   background: #FFFFFF;
   border-radius: 18px;
-  padding: 32px 28px;
-  max-width: 300px;
+  padding: 24px 24px 28px;
+  max-width: 320px;
   width: 100%;
   text-align: center;
   box-shadow: 0 8px 40px rgba(0,0,0,0.3);
 }
 .paste-overlay-box p {
   font-family: 'Jost', sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: #1C1C1C;
   line-height: 1.45;
+  margin-bottom: 16px;
+}
+.paste-overlay-video {
+  width: 100%;
+  border-radius: 10px;
+  display: block;
+  max-height: 220px;
+  object-fit: cover;
+  background: #000;
 }
 
 /* ── FOOTER UPSTARI ── */
@@ -941,6 +950,14 @@ h1 em { font-style: italic; color: var(--terra); }
 <div class="paste-overlay hidden" id="paste-overlay">
   <div class="paste-overlay-box">
     <p id="paste-overlay-text">📋 En Google mantén presionado y toca Pegar</p>
+    <video
+      id="paste-video"
+      class="paste-overlay-video"
+      src="copy_65834DD9-565A-41D4-A423-B9944609CEE3.mp4"
+      muted
+      playsinline
+      preload="auto"
+    ></video>
   </div>
 </div>
 
@@ -1401,8 +1418,12 @@ function openGoogle() {
   document.getElementById('paste-overlay-text').textContent = currentLang === 'es'
     ? '📋 En Google mantén presionado y toca Pegar'
     : '📋 On Google, press & hold then tap Paste';
+  const video = document.getElementById('paste-video');
+  video.currentTime = 0;
+  video.play().catch(() => {});
   overlay.classList.remove('hidden');
   setTimeout(() => {
+    video.pause();
     overlay.classList.add('hidden');
     window.open(GOOGLE_URL, '_blank');
     if (copiedDone) {
