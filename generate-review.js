@@ -214,9 +214,14 @@ Basándote en esta experiencia específica:
 - Servicio: ${service} — ${serviceDescriptor}
 - Viniste con: ${vibe} — ${vibeDescriptor}
 
-Escribe una reseña para Google exactamente como la escribiría esa persona. Entre 2 y 3 oraciones, con un total de entre 25 y 35 palabras. Tono casual y directo, como hablaría alguien que vino a comer sin pretensiones.
+Escribe una reseña para Google exactamente como la escribiría esa persona desde su celular — rápido, sin pensar demasiado. Entre 2 y 3 oraciones, con un total de entre 25 y 35 palabras.
 
-Varía siempre el punto de partida: a veces empieza por la comida, a veces por cómo te sentiste al salir, a veces por el servicio, a veces por algo que te sorprendió.
+El tono debe sonar así (solo como referencia de nivel de lenguaje, NO copies estas frases):
+- "Rico de verdad, las porciones son grandes y el servicio estuvo bien. Ya volveré."
+- "Fui con mi familia y todos quedaron contentos. La comida buena y el precio razonable."
+- "El servicio súper rápido y la comida estaba buena. Lo recomiendo."
+
+Cada reseña que generes debe ser completamente diferente en estructura y contenido. Varía siempre el punto de partida.
 
 Nunca uses lenguaje de crítica gastronómica como "sabores que transportan", "autenticidad culinaria", "fusión de sabores" o similares.
 Nunca uses frases que resten valor como "nada del otro mundo", "cumplió", "estuvo bien" o similares.
@@ -229,9 +234,14 @@ Based on this specific experience:
 - Service: ${service} — ${serviceDescriptor}
 - Came with: ${vibe} — ${vibeDescriptor}
 
-Write a Google review exactly the way that person would write it. Between 2 and 3 sentences, with a total of between 25 and 35 words. Casual and direct, the way someone talks who came to eat without pretensions.
+Write a Google review exactly the way that person would type it from their phone — fast, without overthinking it. Between 2 and 3 sentences, with a total of between 25 and 35 words.
 
-Always vary the starting point: sometimes lead with the food, sometimes how you felt walking out, sometimes the service, sometimes something that surprised you.
+The tone should sound like this (for style reference only, do NOT copy these):
+- "Really good food and the portions are huge. Service was on point too."
+- "Went with family and everyone was happy. Good food and fair price, will be back."
+- "Super fast service and the food was great. Definitely recommend it."
+
+Every review you generate must be completely different in structure and content. Always vary the opening.
 
 Never use food critic language like "flavors that transport you", "culinary authenticity", "flavor profiles" or similar.
 Never use phrases that diminish the experience like "nothing special", "it was ok", "decent" or similar.
