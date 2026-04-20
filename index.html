@@ -1426,7 +1426,13 @@ function openGoogle() {
   setTimeout(() => {
     video.pause();
     overlay.classList.add('hidden');
-    window.open(GOOGLE_URL, '_blank');
+    const a = document.createElement('a');
+    a.href = GOOGLE_URL;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     if (copiedDone) {
       incrementCount();
       setTimeout(() => showThankYou(), 600);
