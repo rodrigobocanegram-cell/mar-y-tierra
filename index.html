@@ -1124,6 +1124,11 @@ function setLang(lang) {
   document.getElementById('regen-btn-text').textContent = tx.regenBtn;
   document.getElementById('paste-hint-text').textContent = tx.pasteHint;
   document.getElementById('platform-label').textContent = tx.platformLabel;
+  // Update banner if it's showing the "review ready" state
+  const banner = document.getElementById('welcome-banner');
+  if (banner.style.display !== 'none') {
+    document.getElementById('welcome-text').textContent = tx.reviewReadyText;
+  }
   document.getElementById('ty-title').textContent = tx.tyTitle;
   document.getElementById('ty-sub').textContent = tx.tySub;
   document.getElementById('ty-btn').textContent = tx.tyBtn;
