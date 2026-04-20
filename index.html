@@ -1410,17 +1410,11 @@ function copyReview() {
 // ── OPEN PLATFORMS ──
 function openGoogle() {
   trackEvent('google');
-  const a = document.createElement('a');
-  a.href = GOOGLE_URL;
-  a.target = '_blank';
-  a.rel = 'noopener noreferrer';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
   if (copiedDone) {
     incrementCount();
     setTimeout(() => showThankYou(), 600);
   }
+  window.location.href = GOOGLE_URL;
 }
 function openYelp() { trackEvent('yelp'); window.open(YELP_URL, '_blank'); }
 
