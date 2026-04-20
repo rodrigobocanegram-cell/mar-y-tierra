@@ -214,13 +214,17 @@ Experiencia:
 - Servicio: ${service} — ${serviceDescriptor}
 - Viniste con: ${vibe} — ${vibeDescriptor}
 
-Escribe una reseña corta para Google. Entre 1 y 3 oraciones. Máximo 30 palabras.
+Escribe una reseña para Google. MÁXIMO 20 PALABRAS en total. Una o dos oraciones muy cortas.
+
+Ejemplos del tono exacto que buscamos (NO copies estas frases, son solo referencia):
+- "Rico de verdad y las porciones enormes. Volveré."
+- "Fuimos en familia y todos contentos. Muy buena comida."
+- "Servicio rápido y la comida sabrosa. Lo recomiendo."
+- "Buena comida peruana y precio justo. 100% recomendado."
 
 Reglas:
-- No tienes que mencionar los tres factores. Enfócate en lo que más te impresionó.
-- Varía siempre cómo empieza. A veces por la comida, a veces por el servicio, a veces por las porciones, a veces por el precio, a veces por que volverías.
-- Usa vocabulario simple y directo. Como escribirías desde el celular.
-- Puedes terminar con "lo recomiendo", "volveremos", "100% recomendado" o similar si encaja natural.
+- Palabras simples. Frases cortas. Como un mensaje de texto.
+- No tienes que mencionar los tres factores.
 - Sin emojis. Sin guiones. Sin comillas. Sin nombres de platos. Sin nombrar el restaurante.
 
 Solo el texto de la reseña.`
@@ -231,13 +235,17 @@ Experience:
 - Service: ${service} — ${serviceDescriptor}
 - Came with: ${vibe} — ${vibeDescriptor}
 
-Write a short Google review. Between 1 and 3 sentences. Maximum 30 words.
+Write a Google review. MAXIMUM 20 WORDS total. One or two very short sentences.
+
+Examples of the exact tone we want (do NOT copy these, just use as reference):
+- "Really good food and huge portions. Will be back."
+- "Went with family, everyone was happy. Great Peruvian food."
+- "Fast service and the food was great. Highly recommend."
+- "Good food, fair price, big portions. 100% recommend."
 
 Rules:
-- You don't have to mention all three factors. Focus on what stood out most.
-- Always vary the opening. Sometimes lead with food, sometimes service, sometimes portions, sometimes price, sometimes that you'd come back.
-- Use simple direct vocabulary. Like you'd type from your phone.
-- You can end with "highly recommend", "will be back", "100% recommend" if it feels natural.
+- Simple words. Short sentences. Like a text message.
+- You don't have to mention all three factors.
 - No emojis. No dashes. No quotes. No dish names. No restaurant name.
 
 Only the review text.`;
