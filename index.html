@@ -705,6 +705,29 @@ h1 em { font-style: italic; color: var(--terra); }
   font-weight: 500;
 }
 
+/* ── PASTE HINT ── */
+.paste-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(139,46,26,0.07);
+  border: 1.5px solid rgba(139,46,26,0.28);
+  border-radius: 10px;
+  padding: 13px 15px;
+}
+.paste-hint-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+.paste-hint-text {
+  font-family: 'Jost', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--terra);
+  line-height: 1.5;
+}
+
 /* ── PASTE OVERLAY ── */
 .paste-overlay {
   position: fixed;
@@ -888,6 +911,12 @@ h1 em { font-style: italic; color: var(--terra); }
         <span id="maps-btn-text">Paste it on Google</span>
       </button>
 
+      <!-- Paste hint -->
+      <div class="paste-hint">
+        <span class="paste-hint-icon">📋</span>
+        <span class="paste-hint-text" id="paste-hint-text">On Google, press and hold inside the text box, then tap Paste.</span>
+      </div>
+
       <!-- Regen — same answers, new review -->
       <button class="btn btn-regen" id="btn-regen" onclick="generateAIReview()">
         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -907,20 +936,6 @@ h1 em { font-style: italic; color: var(--terra); }
       <button class="btn-another" onclick="resetFlow()" id="ty-btn">Leave Another Review</button>
     </div>
 
-    <!-- PHOTO -->
-    <div class="photo-section" id="photo-section">
-      <div class="section-label" id="photo-label">Add a photo</div>
-      <div class="photo-preview" id="photo-preview"><img id="photo-img"/></div>
-      <input type="file" id="camera-input" accept="image/*" style="display:none;" onchange="handlePhoto(event)"/>
-      <button class="btn btn-photo" id="btn-photo" onclick="openCamera()">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-          <circle cx="12" cy="13" r="4"/>
-        </svg>
-        <span id="photo-btn-text">Take a Photo to Add to Your Review</span>
-      </button>
-      <p class="photo-hint" id="photo-hint">Photos increase review impact by 35% — snap one with your server!</p>
-    </div>
 
     <!-- OTHER PLATFORMS -->
     <div class="platform-section">
@@ -946,20 +961,6 @@ h1 em { font-style: italic; color: var(--terra); }
 
 </div><!-- /container -->
 
-<!-- PASTE OVERLAY -->
-<div class="paste-overlay hidden" id="paste-overlay">
-  <div class="paste-overlay-box">
-    <p id="paste-overlay-text">📋 En Google mantén presionado y toca Pegar</p>
-    <video
-      id="paste-video"
-      class="paste-overlay-video"
-      src="copy_65834DD9-565A-41D4-A423-B9944609CEE3.mp4"
-      muted
-      playsinline
-      preload="auto"
-    ></video>
-  </div>
-</div>
 
 <script type="module">
 // ── CONFIG ──
@@ -1036,12 +1037,8 @@ const t = {
     copyBtn: 'Copy Review',
     mapsBtn: 'Paste it on Google',
     regenBtn: 'Regenerate Review',
+    pasteHint: 'On Google, press and hold inside the text box, then tap Paste.',
     copiedBadge: '✓ Copied — now tap the button above to paste it on Google',
-    photoLabel: 'Add a photo',
-    photoBtn: 'Take a Photo to Add to Your Review',
-    photoHint: 'Photos increase review impact by 35% — snap one with your server!',
-    photoTaken: 'Press and hold to save · then upload it on Google Maps',
-    retakeBtn: 'Retake',
     platformLabel: 'Also review us on',
     counterSingle: 'review generated this month',
     counterPlural: 'reviews generated this month',
@@ -1074,12 +1071,8 @@ const t = {
     copyBtn: 'Copiar Reseña',
     mapsBtn: 'Pégala en Google',
     regenBtn: 'Regenerar Reseña',
+    pasteHint: 'En Google, mantén presionado dentro del cuadro de texto y toca Pegar.',
     copiedBadge: '✓ Copiado — ahora toca el botón de arriba para pegarla en Google',
-    photoLabel: 'Agrega una foto',
-    photoBtn: 'Tomar Foto para tu Reseña',
-    photoHint: 'Las fotos aumentan el impacto 35% — ¡tómate una con tu mesero!',
-    photoTaken: 'Mantén presionada para guardar · luego súbela en Google Maps',
-    retakeBtn: 'Repetir',
     platformLabel: 'También reseñanos en',
     counterSingle: 'reseña generada este mes',
     counterPlural: 'reseñas generadas este mes',
@@ -1129,9 +1122,7 @@ function setLang(lang) {
   document.getElementById('copy-btn-text').textContent = tx.copyBtn;
   document.getElementById('maps-btn-text').textContent = tx.mapsBtn;
   document.getElementById('regen-btn-text').textContent = tx.regenBtn;
-  document.getElementById('photo-label').textContent = tx.photoLabel;
-  document.getElementById('photo-btn-text').textContent = tx.photoBtn;
-  document.getElementById('photo-hint').textContent = tx.photoHint;
+  document.getElementById('paste-hint-text').textContent = tx.pasteHint;
   document.getElementById('platform-label').textContent = tx.platformLabel;
   document.getElementById('ty-title').textContent = tx.tyTitle;
   document.getElementById('ty-sub').textContent = tx.tySub;
@@ -1234,7 +1225,6 @@ function backToQuiz() {
   document.getElementById('review-screen').classList.add('hidden');
   document.getElementById('quiz-screen').classList.remove('hidden');
   document.getElementById('thankyou-screen').classList.remove('show');
-  document.getElementById('photo-section').style.display = '';
   document.getElementById('welcome-banner').style.display = 'none';
   // Reset one-at-a-time flow
   answers.food = null; answers.service = null; answers.vibe = null;
@@ -1415,35 +1405,22 @@ function copyReview() {
 // ── OPEN PLATFORMS ──
 function openGoogle() {
   trackEvent('google');
-  const overlay = document.getElementById('paste-overlay');
-  document.getElementById('paste-overlay-text').textContent = currentLang === 'es'
-    ? '📋 En Google mantén presionado y toca Pegar'
-    : '📋 On Google, press & hold then tap Paste';
-  const video = document.getElementById('paste-video');
-  video.currentTime = 0;
-  video.play().catch(() => {});
-  overlay.classList.remove('hidden');
-  setTimeout(() => {
-    video.pause();
-    overlay.classList.add('hidden');
-    const a = document.createElement('a');
-    a.href = GOOGLE_URL;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    if (copiedDone) {
-      incrementCount();
-      setTimeout(() => showThankYou(), 600);
-    }
-  }, 2000);
+  const a = document.createElement('a');
+  a.href = GOOGLE_URL;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  if (copiedDone) {
+    incrementCount();
+    setTimeout(() => showThankYou(), 600);
+  }
 }
 function openYelp() { trackEvent('yelp'); window.open(YELP_URL, '_blank'); }
 
 // ── THANK YOU ──
 function showThankYou() {
-  document.getElementById('photo-section').style.display = 'none';
   const ty = document.getElementById('thankyou-screen');
   ty.classList.add('show');
   ty.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1456,52 +1433,6 @@ function resetFlow() {
 }
 
 // ── PHOTO ──
-function openCamera() {
-  const input = document.getElementById('camera-input');
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  if (isIOS) {
-    input.setAttribute('capture', 'environment');
-  } else {
-    input.removeAttribute('capture');
-  }
-  input.click();
-}
-
-function handlePhoto(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  // Usar URL.createObjectURL para mejor compatibilidad en Android
-  const url = URL.createObjectURL(file);
-  const img = document.getElementById('photo-img');
-  img.onload = () => URL.revokeObjectURL(url); // liberar memoria
-  img.src = url;
-
-  document.getElementById('photo-preview').style.display = 'block';
-  document.getElementById('btn-photo').style.display = 'none';
-
-  // Botón retake
-  const existing = document.getElementById('btn-retake');
-  if (!existing) {
-    const retake = document.createElement('button');
-    retake.className = 'btn btn-retake';
-    retake.id = 'btn-retake';
-    retake.onclick = retakePhoto;
-    retake.textContent = t[currentLang].retakeBtn;
-    document.getElementById('photo-hint').before(retake);
-  }
-  document.getElementById('photo-hint').textContent = t[currentLang].photoTaken;
-  document.getElementById('photo-hint').style.color = 'var(--gold)';
-}
-function retakePhoto() {
-  document.getElementById('photo-preview').style.display = 'none';
-  document.getElementById('camera-input').value = '';
-  document.getElementById('btn-photo').style.display = 'flex';
-  const rb = document.getElementById('btn-retake');
-  if (rb) rb.remove();
-  document.getElementById('photo-hint').textContent = t[currentLang].photoHint;
-  document.getElementById('photo-hint').style.color = '';
-}
 
 // ── INIT ──
 window.addEventListener('load', () => {
