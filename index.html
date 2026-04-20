@@ -888,6 +888,26 @@ h1 em { font-style: italic; color: var(--terra); }
         <span id="maps-btn-text">Paste it on Google</span>
       </button>
 
+      <!-- Paste instruction -->
+      <div id="paste-instruction" style="
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 10px 14px;
+        background: rgba(139,46,26,0.06);
+        border-left: 2px solid var(--terra);
+        border-radius: 6px;
+        margin-top: -2px;
+      ">
+        <span style="font-size: 15px; flex-shrink: 0;">📋</span>
+        <span id="paste-instruction-text" style="
+          font-family: 'Inter', sans-serif;
+          font-size: 12px;
+          color: var(--terra);
+          line-height: 1.5;
+        ">On Google, press and hold inside the text box, then tap Paste.</span>
+      </div>
+
       <!-- Regen — same answers, new review -->
       <button class="btn btn-regen" id="btn-regen" onclick="generateAIReview()">
         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -905,21 +925,6 @@ h1 em { font-style: italic; color: var(--terra); }
       <div class="thankyou-title" id="ty-title">Thank you so much!</div>
       <p class="thankyou-sub" id="ty-sub">Your review means the world to us.<br>See you again soon.</p>
       <button class="btn-another" onclick="resetFlow()" id="ty-btn">Leave Another Review</button>
-    </div>
-
-    <!-- PHOTO -->
-    <div class="photo-section" id="photo-section">
-      <div class="section-label" id="photo-label">Add a photo</div>
-      <div class="photo-preview" id="photo-preview"><img id="photo-img"/></div>
-      <input type="file" id="camera-input" accept="image/*" style="display:none;" onchange="handlePhoto(event)"/>
-      <button class="btn btn-photo" id="btn-photo" onclick="openCamera()">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-          <circle cx="12" cy="13" r="4"/>
-        </svg>
-        <span id="photo-btn-text">Take a Photo to Add to Your Review</span>
-      </button>
-      <p class="photo-hint" id="photo-hint">Photos increase review impact by 35% — snap one with your server!</p>
     </div>
 
     <!-- OTHER PLATFORMS -->
@@ -1050,7 +1055,7 @@ const t = {
     tyBtn: 'Leave Another Review',
     editBtn: 'Edit Review',
     editingLabel: 'Editing...',
-    generateBtn: 'Generate My Review',
+    pasteInstruction: 'On Google, press and hold inside the text box, then tap Paste.',
     generatingLabel: 'Working on your review…',
     q1Label: 'Food', q1Text: 'How was your food?',
     q1Opts: ['😍 Delicious', '😋 Very Good', '👍 Good'],
@@ -1088,7 +1093,7 @@ const t = {
     tyBtn: 'Dejar Otra Reseña',
     editBtn: 'Editar Reseña',
     editingLabel: 'Editando...',
-    generateBtn: 'Generar mi Reseña',
+    pasteInstruction: 'En Google, mantén presionado dentro del cuadro de texto y toca Pegar.',
     generatingLabel: 'Preparando tu reseña…',
     q1Label: 'Comida', q1Text: '¿Cómo estuvo tu plato?',
     q1Opts: ['😍 Delicioso', '😋 Muy bueno', '👍 Bueno'],
@@ -1138,6 +1143,8 @@ function setLang(lang) {
   document.getElementById('ty-btn').textContent = tx.tyBtn;
   document.getElementById('edit-btn-text').textContent = tx.editBtn;
   document.getElementById('generating-label').textContent = tx.generatingLabel;
+  const pi = document.getElementById('paste-instruction-text');
+  if (pi) pi.textContent = tx.pasteInstruction;
 
   // Update quiz labels and options
   document.getElementById('q1-label').textContent = tx.q1Label;
@@ -1415,17 +1422,11 @@ function copyReview() {
 // ── OPEN PLATFORMS ──
 function openGoogle() {
   trackEvent('google');
-  const overlay = document.getElementById('paste-overlay');
-  document.getElementById('paste-overlay-text').textContent = currentLang === 'es'
-    ? '📋 En Google mantén presionado y toca Pegar'
-    : '📋 On Google, press & hold then tap Paste';
-  const video = document.getElementById('paste-video');
-  video.currentTime = 0;
-  video.play().catch(() => {});
-  overlay.classList.remove('hidden');
-  setTimeout(() => {
-    video.pause();
-    overlay.classList.add('hidden');
+
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+  if (isSafari) {
+    // Safari: open Google immediately (must be synchronous on user tap)
     const a = document.createElement('a');
     a.href = GOOGLE_URL;
     a.target = '_blank';
@@ -1437,7 +1438,32 @@ function openGoogle() {
       incrementCount();
       setTimeout(() => showThankYou(), 600);
     }
-  }, 2000);
+  } else {
+    // Chrome/others: show overlay with video first, then open Google
+    const overlay = document.getElementById('paste-overlay');
+    document.getElementById('paste-overlay-text').textContent = currentLang === 'es'
+      ? '📋 En Google mantén presionado y toca Pegar'
+      : '📋 On Google, press & hold then tap Paste';
+    const video = document.getElementById('paste-video');
+    video.currentTime = 0;
+    video.play().catch(() => {});
+    overlay.classList.remove('hidden');
+    setTimeout(() => {
+      video.pause();
+      overlay.classList.add('hidden');
+      const a = document.createElement('a');
+      a.href = GOOGLE_URL;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      if (copiedDone) {
+        incrementCount();
+        setTimeout(() => showThankYou(), 600);
+      }
+    }, 2000);
+  }
 }
 function openYelp() { trackEvent('yelp'); window.open(YELP_URL, '_blank'); }
 
